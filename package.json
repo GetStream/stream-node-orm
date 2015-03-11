@@ -1,0 +1,15 @@
+{
+  "name": "getstream-node",
+  "version": "1.0.0",
+  "description": "Build newsfeeds and activity feeds on node.js using getstream.io",
+  "author": "Mario Delgado <mariodel@gmail.com> (http://getstream.io/)",
+  "license": "MIT",
+  "main": "./src/init.js",
+  "dependencies": {
+    "getstream": "^2.1.7",
+    "nconf": "^0.7.1"    
+  },
+  "devDependencies": {
+  },
+  "engine": "node >= 0.8"
+}
