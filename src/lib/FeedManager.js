@@ -1,10 +1,10 @@
 var stream = require('getstream');
 
-var GetStreamNode = function () {
+var FeedManager = function () {
   this.initialize.apply(this, arguments);
 };
 
-GetStreamNode.prototype = {
+FeedManager.prototype = {
 
   initialize: function(settings) {
 
@@ -90,4 +90,4 @@ GetStreamNode.prototype = {
 
 };
 
-module.exports = GetStreamNode;
+module.exports = FeedManager;

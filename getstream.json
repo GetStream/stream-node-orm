@@ -1,0 +1,22 @@
+{
+  "apiKey": "",
+  
+  "apiSecret": "",
+  
+  "apiAppId": "",
+  
+  "apiLocation": "",
+  
+  "userFeed": "user",
+  
+  "notificationFeed": "notification",
+
+  "newsFeeds": {
+    
+    "flat": "flat",
+    
+    "aggregated": "aggregated"
+  },
+
+  "ORM": "mongoose"
+}

@@ -1,13 +1,15 @@
 var nconf = require('nconf');
-var GetStreamNode = require('./lib/getstream-node')
 
-function init() {
-
+var Config = function () {
   // load config from defaults or config file
 
   nconf.argv().env();
 
-  config_file = process.cwd() + '/config/getstream-node.json';
+  if (typeof(process) != "undefined" && process.env.STREAM_NODE_CONFIG_DIR) {
+    config_file = process.env.STREAM_NODE_CONFIG_DIR + '/getstream.json';
+  } else {
+    config_file = process.cwd() + '/getstream.json';
+  }
 
   nconf.file({ file: config_file });
 
@@ -28,7 +30,7 @@ function init() {
 
   settings = nconf.get('getstream-node');
 
-  return new GetStreamNode(settings);
-}
+  return settings;
+};
 
-module.exports.init = init;
+module.exports = Config;
