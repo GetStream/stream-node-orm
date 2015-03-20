@@ -7,8 +7,7 @@
   "main": "./src/GetStreamNode.js",
   "dependencies": {
     "getstream": "^2.1.7",
-    "mongoose-auto-increment": "^3.2.0",
-    "nconf": "^0.7.1"    
+    "mongoose-auto-increment": "^3.2.0"
   },
   "devDependencies": {
   },

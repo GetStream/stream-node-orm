@@ -76,16 +76,19 @@ FeedManager.prototype = {
 
   activityCreated: function(instance) {
     // placeholder function for now
-
-    feed = this.getFeed(this.settings.userFeed, instance.actor_id);
+    feed = this.getFeed(this.settings.userFeed, instance.userId);
     feed.addActivity(instance.activity);
+
+    // console.log(instance.activity);
   },
 
 
-  activityDeleted: function(instance) {
+  activityDeleted: function(activity) {
     // placeholder function for now
-    feed = this.getFeed(this.settings.userFeed, instance.actor_id);
-    feed.removeActivity({'foreignId': instance.foreign_id});
+    feed = this.getFeed(this.settings.userFeed, activity.actor);
+    feed.removeActivity({'foreignId': activity.foreign_id});
+
+    console.log('activity created!');
   }
 
 };

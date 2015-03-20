@@ -1,34 +1,36 @@
-var nconf = require('nconf');
+var path = require('path'),
+    fs = require('fs'),
+    exists = fs.existsSync || path.existsSync;
+
+function _loadFile(path) {
+
+  var settings = {};
+
+  config = JSON.parse(JSON.stringify(require(path).config));
+
+  Object.keys(config).forEach(function (key) {
+    settings[key] = config[key]
+  });
+
+  return settings;
+}
 
 var Config = function () {
   // load config from defaults or config file
 
-  nconf.argv().env();
-
   if (typeof(process) != "undefined" && process.env.STREAM_NODE_CONFIG_DIR) {
-    config_file = process.env.STREAM_NODE_CONFIG_DIR + '/getstream.json';
+    config_file = process.env.STREAM_NODE_CONFIG_DIR + '/getstream.js';
   } else {
-    config_file = process.cwd() + '/getstream.json';
+    config_file = process.cwd() + '/getstream.js';
   }
 
-  nconf.file({ file: config_file });
+  var default_config_file = path.join(__dirname, 'config.default.js');
 
-  nconf.defaults({
-    "getstream-node": {
-      "apiKey": "",
-      "apiSecret": "",
-      "apiAppId": "",
-      "apiLocation": "",
-      "userFeed": "user",
-      "notificationFeed": "user",
-      "newsFeeds": {
-        "flat": "flat",
-        "aggregated": "aggregated"
-      }
-    }
-  });
-
-  settings = nconf.get('getstream-node');
+  if (exists(config_file)) {
+    settings = _loadFile(config_file);
+  } else {
+    settings = _loadFile(default_config_file);
+  }
 
   return settings;
 };
