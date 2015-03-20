@@ -1,6 +1,6 @@
 // var autoIncrement = require('mongoose-auto-increment');
 var util = require('util');
-// var FeedManager = require('getstream-node');
+var stream_node = require('getstream-node');
 
 var Mongoose = function () {
   this.initialize.apply(this, arguments);
@@ -16,6 +16,13 @@ Mongoose.prototype = {
 
   registerActivity: function (Model) {
 
+      // console.log(Model);
+
+      var modelName = Model.modelName;
+      // console.log(modelName);
+
+      var FeedManager = stream_node.FeedManager;
+
       schema = Model.schema;
 
       Model.prototype.foreign_id = function() {
@@ -30,8 +37,6 @@ Mongoose.prototype = {
       schema.post('save', function (doc) {
 
         if (this.wasNew) {
-
-          modelName = Model.constructor.modelName;
 
           instance = {
             userId: doc.user,

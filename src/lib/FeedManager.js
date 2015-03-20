@@ -77,9 +77,12 @@ FeedManager.prototype = {
   activityCreated: function(instance) {
     // placeholder function for now
     feed = this.getFeed(this.settings.userFeed, instance.userId);
-    feed.addActivity(instance.activity);
+    feed.addActivity(instance.activity, function(error, response, body) {
+      console.log(error);
+      console.log(instance.activity);
+      console.log(response.body);
+    });
 
-    // console.log(instance.activity);
   },
 
 
