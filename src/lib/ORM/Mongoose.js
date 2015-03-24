@@ -1,62 +1,49 @@
-// var autoIncrement = require('mongoose-auto-increment');
 var util = require('util');
 var stream_node = require('getstream-node');
 
-var Mongoose = function () {
-  this.initialize.apply(this, arguments);
-};
+var Mongoose = function (Model) {
+    // console.log(Model);
 
-Mongoose.prototype = {
+    var modelName = Model.modelName;
+    // console.log(modelName);
 
-  // autoIncrement.initialize(connection);
+    var FeedManager = stream_node.FeedManager;
 
-  initialize: function () {
-  },
+    schema = Model.schema;
 
+    Model.prototype.foreign_id = function() {
+        return this._id; 
+    }
 
-  registerActivity: function (Model) {
+    schema.pre('save', function (next) {
+      this.wasNew = this.isNew;
+      next();
+    });
 
-      // console.log(Model);
+    schema.post('save', function (doc) {
 
-      var modelName = Model.modelName;
-      // console.log(modelName);
+      if (this.wasNew) {
 
-      var FeedManager = stream_node.FeedManager;
+        instance = {
+          userId: doc.user,
+          activity: {
+            actor: 'user:' + doc.user, 
+            verb: modelName,
+            object: modelName + ':' + doc._id,
+            foreign_id: modelName + ':' + doc._id
+          }
+        };
 
-      schema = Model.schema;
-
-      Model.prototype.foreign_id = function() {
-          return this._id; 
+        FeedManager.activityCreated(instance);
       }
+    });
 
-      schema.pre('save', function (next) {
-        this.wasNew = this.isNew;
-        next();
+    schema.post('remove', function (doc) {
+      FeedManager.activityDeleted({
+        foreign_id: modelName + ':' + doc._id,
+        actor: doc.user
       });
-
-      schema.post('save', function (doc) {
-
-        if (this.wasNew) {
-
-          instance = {
-            userId: doc.user,
-            activity: {
-              actor: 'user:' + doc.user, 
-              verb: modelName,
-              object: modelName + ':' + doc.item_id,
-              foreign_id: modelName + ':' + doc._id
-            }
-          };
-
-          FeedManager.activityCreated(instance);
-        }
-      });
-
-      schema.post('remove', function (doc) {
-        FeedManager.activityDeleted(doc);
-      });
-  }
-
-}
+    });
+};
 
 module.exports = Mongoose;

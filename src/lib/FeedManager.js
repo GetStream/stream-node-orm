@@ -77,8 +77,8 @@ FeedManager.prototype = {
   activityCreated: function(instance) {
     // placeholder function for now
     feed = this.getFeed(this.settings.userFeed, instance.userId);
-    feed.addActivity(instance.activity, function(error, response, body) {
-      console.log(error);
+    feed.addActivity(instance.activity, function(err, response, body) {
+      if (err) console.log(err);
       console.log(instance.activity);
       console.log(response.body);
     });
@@ -88,10 +88,14 @@ FeedManager.prototype = {
 
   activityDeleted: function(activity) {
     // placeholder function for now
+    console.log(activity);
     feed = this.getFeed(this.settings.userFeed, activity.actor);
-    feed.removeActivity({'foreignId': activity.foreign_id});
+    feed.removeActivity({'foreignId': activity.foreign_id}, function(err, response, body) {
+      if (err) console.log(err);
+      console.log(response.body);
+    });
 
-    console.log('activity created!');
+    console.log('activity deleted!');
   }
 
 };
