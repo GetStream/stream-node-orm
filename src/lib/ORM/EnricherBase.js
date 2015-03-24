@@ -1,12 +1,16 @@
-var _ = require('underscore');
-
-var Enricher = function () {
-  this.initialize.apply(this, arguments);
+var Enricher = function (obj) {
+  if (obj) return mixin(obj);
 };
+
+function mixin(obj) {
+  for (var key in Enricher.prototype) {
+    obj.prototype[key] = Enricher.prototype[key];
+  }
+}
 
 Enricher.prototype = {
 
-    initialize: function(fields) {
+    setFields: function(fields) {
         this.fields = fields || ['actor', 'object'];
     },
 
@@ -29,6 +33,19 @@ Enricher.prototype = {
         }
 
         return activities;
+    },
+
+
+    retreiveObjects: function (activities) {
+        for (key in activities) {
+          activity = activities[key];
+
+          for (model in activity['references']) {
+            objectIds = activity['references'][model];
+
+            activites[key]['objects'][model] = this.fromDB(objectsIds);
+          }
+        }
     },
 
 
@@ -57,32 +74,3 @@ Enricher.prototype = {
 }
 
 module.exports = Enricher;
-
-pinSchema.statics.enrich_activities = function(pin_activities, cb){
-  if (typeof pin_activities === 'undefined')
-    return cb(null, []);
-
-    pinIds = _.map(_.pluck(pin_activities, 'foreign_id'), function(foreign_id){
-      return parseInt(foreign_id.split(':')[1]);
-    });
-
-  Pin.find({_id: {$in: pinIds}}).populate(['user', 'item']).exec(function(err, found){
-    User.populate(found, {path: 'item.user'}, function(err, done){
-      if (err)
-        return next(err);
-      else
-        cb(err, done);
-    });
-  });
-};
-
-followSchema.statics.enrich_activities = function(follow_activities, cb){
-  if (typeof follow_activities === 'undefined')
-    return cb(null, []);
-
-  followIds = _.map(_.pluck(follow_activities, 'foreign_id'), function(foreign_id){
-    return parseInt(foreign_id.split(':')[1]);
-  });
-
-  Follow.find({_id: {$in: followIds}}).populate(['user', 'target']).exec(cb);
-};

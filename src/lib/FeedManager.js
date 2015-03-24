@@ -28,11 +28,12 @@ FeedManager.prototype = {
 
 
   getUserFeed: function(userId) {
-    return this.client.feed(userFeed, userId);
+    return this.client.feed(this.settings.userFeed, userId);
   },
 
+
   getNotificationFeed: function(userId) {
-    return this.client.feed(notificationFeed, userId);
+    return this.client.feed(this.settings.notificationFeed, userId);
   },
   
 

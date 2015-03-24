@@ -1,7 +1,8 @@
 var util = require('util');
 var stream_node = require('getstream-node');
+var EnricherBase = require('./EnricherBase');
 
-var Mongoose = function (Model) {
+var ActivityModel = function (Model) {
     // console.log(Model);
 
     var modelName = Model.modelName;
@@ -44,6 +45,20 @@ var Mongoose = function (Model) {
         actor: doc.user
       });
     });
+
+    var Enricher = EnricherBase;
+
+    Enricher.prototype.fromDb = function (objectsIds) {
+      var found = [];
+
+      Model.find({_id: {$in: objectsIds}}).populate(['user']).exec(function(err, objects) {
+        if (err) console.log(err);
+        found = objects;
+      });
+
+      return found;
+    };
 };
 
-module.exports = Mongoose;
+module.exports.ActivityModel = ActivityModel;
+
