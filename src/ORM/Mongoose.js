@@ -42,4 +42,3 @@ var ActivityModel = function(Model) {
   };
 
   module.exports.ActivityModel = ActivityModel;
-  module.exports.Enricher = Enricher;

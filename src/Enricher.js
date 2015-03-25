@@ -1,4 +1,4 @@
-function Enricher(fields, options) {
+var Enricher = function(fields, options) {
   this.setFields(fields);
 }
 
