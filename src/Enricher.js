@@ -1,23 +1,13 @@
-var Enricher = function (obj) {
-  if (obj) return mixin(obj);
-};
-
-function mixin(obj) {
-  for (var key in Enricher.prototype) {
-    obj.prototype[key] = Enricher.prototype[key];
-  }
+function Enricher(fields, options) {
+  this.setFields(fields);
 }
 
 Enricher.prototype = {
-
     setFields: function(fields) {
         this.fields = fields || ['actor', 'object'];
     },
-
-
     collectReferences: function(activities) {
         var modelReferences = [];
-
         for (key in activities) {
 
             activity = activities[key];
@@ -31,11 +21,8 @@ Enricher.prototype = {
                 }
             }
         }
-
         return activities;
     },
-
-
     retreiveObjects: function (activities) {
         for (key in activities) {
           activity = activities[key];
@@ -47,8 +34,6 @@ Enricher.prototype = {
           }
         }
     },
-
-
     enrichActivities: function(activities) {
         if (activities.length == 0) {
             return activities;
@@ -58,17 +43,13 @@ Enricher.prototype = {
 
         return activities;
     },
-
-
     enrichAggregatedActivities: function(aggregatedActivities) {
         if (activities.length == 0) {
             return activities;
         }
-
         for (key in aggregatedActivities) {
             aggregatedActivities[key]['activities'] = this.collectReferences(aggregatedActivities[key]['activities']);
         }
-
         return activities;
     }
 }

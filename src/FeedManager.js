@@ -83,9 +83,7 @@ FeedManager.prototype = {
       console.log(instance.activity);
       console.log(response.body);
     });
-
   },
-
 
   activityDeleted: function(activity) {
     // placeholder function for now
