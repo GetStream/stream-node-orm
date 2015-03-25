@@ -35,7 +35,6 @@ BaseActivity.prototype.create_activity = function() {
 
 // Backend specific proto functions
 BaseActivity.prototype.activity_create_reference = function() {
-    // TODO: throw a not configured expection
 };
 
 BaseActivity.prototype.fromDb = function(objectsIds) {};

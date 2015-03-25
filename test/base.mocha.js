@@ -1,17 +1,17 @@
 var should = require('should');
-var EnricherBase = require('../src/Enricher.js');
+var Enricher = require('../src/Enricher.js');
 
-describe('EnricherBase', function() {
+describe('Enricher', function() {
 
     it('should have right properties', function() {
-        new EnricherBase().should.have.property('setFields');
-        new EnricherBase().should.have.property('collectReferences');
-        new EnricherBase().should.have.property('enrichActivities');
-        new EnricherBase().should.have.property('enrichAggregatedActivities');
+        new Enricher().should.have.property('setFields');
+        new Enricher().should.have.property('collectReferences');
+        new Enricher().should.have.property('enrichActivities');
+        new Enricher().should.have.property('enrichAggregatedActivities');
     });
 
     it('#setFields()', function() {
-        var enricher = new EnricherBase();
+        var enricher = new Enricher();
         enricher.should.have.property('fields', ['actor', 'object']);
     });
 

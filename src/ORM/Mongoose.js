@@ -1,10 +1,11 @@
-var util = require('util');
+var utils = require('../utils.js');
 var FeedManager = require('../FeedManager.js');
+var BaseActivity = require('../ORM/BaseActivity.js');
 
 
 var ActivityModel = function(Model) {
     // add base proto functions from BaseActivity
-    extend(Model, BaseActivity);
+    utils.extend(Model, BaseActivity);
 
     // add Mongoose specific proto functions
     Model.prototype.activity_create_reference = function() {
