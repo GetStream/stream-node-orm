@@ -9,6 +9,7 @@ FeedManager.prototype = {
   initialize: function(settings) {
 
     this.settings = settings;
+    this._registeredModels = {};
 
     options = {};
 
@@ -23,20 +24,16 @@ FeedManager.prototype = {
       this.client = stream.connect(this.settings.apiKey, this.settings.apiSecret, this.settings.apiAppId, options);
     }
 
-    console.log('getstream-node initialized!');
   },
-
 
   getUserFeed: function(userId) {
     return this.client.feed(this.settings.userFeed, userId);
   },
 
-
   getNotificationFeed: function(userId) {
     return this.client.feed(this.settings.notificationFeed, userId);
   },
   
-
   getNewsFeeds: function(userId) {
     feeds = [];
     newsFeeds = this.settings.newsFeeds;
@@ -49,7 +46,6 @@ FeedManager.prototype = {
     return feeds;
   },
 
-
   followUser: function(userId, targetUserId) {
     newsFeeds = this.getNewsFeeds(userId);
 
@@ -57,7 +53,6 @@ FeedManager.prototype = {
       newsFeeds[slug].follow(this.settings.userFeed, targetUserId);
     }
   },
-
 
   unfollowUser: function(userId, targetUserId) {
     newsFeeds = this.getNewsFeeds(userId);
@@ -67,14 +62,19 @@ FeedManager.prototype = {
     }
   },
 
-
   getFeed: function(slug, userId) {
     return this.client.feed(slug, userId);
   },
 
+  getModelClass: function(modelReference) {
+    return this._registeredModels[modelReference];
+  },
+
+  registerActivityModel: function(model) {
+    this._registeredModels[model.activity_model_reference()] = model.constructor;
+  },
 
   // functions for future ORM observers
-
   activityCreated: function(instance) {
     // placeholder function for now
     feed = this.getFeed(this.settings.userFeed, instance.userId);
@@ -93,8 +93,6 @@ FeedManager.prototype = {
       if (err) console.log(err);
       console.log(response.body);
     });
-
-    console.log('activity deleted!');
   }
 
 };

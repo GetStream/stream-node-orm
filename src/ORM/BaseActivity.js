@@ -33,9 +33,14 @@ BaseActivity.prototype.create_activity = function() {
     return activity;
 }
 
-// Backend specific proto functions
 BaseActivity.prototype.activity_create_reference = function() {
+  return this.activity_model_reference() + ':' + this.activity_instance_reference();
 };
+
+// Backend specific proto functions
+BaseActivity.prototype.activity_instance_reference = function() {}
+
+BaseActivity.prototype.activity_model_reference = function() {}
 
 BaseActivity.prototype.fromDb = function(objectsIds) {};
 
