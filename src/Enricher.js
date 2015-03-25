@@ -30,7 +30,7 @@ Enricher.prototype = {
           for (model in activity['references']) {
             objectIds = activity['references'][model];
 
-            activites[key]['objects'][model] = this.fromDB(objectsIds);
+            activites[key]['objects'][model] = model.fromDB(objectsIds);
           }
         }
     },
