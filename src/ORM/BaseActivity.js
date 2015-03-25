@@ -56,3 +56,4 @@ BaseActivity.prototype.activity_time = function() {};
 
 BaseActivity.prototype.activity_notify = function() {};
 
+module.exports = BaseActivity;
