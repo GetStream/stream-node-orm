@@ -24,8 +24,3 @@ function spec {
 
 mocha ./test/base.mocha.js; spec "base"
 mocha ./test/backends/mongoose.mocha.js; spec "mongoose backend"
-
-echo "   ______  ________________________"
-echo "  / __/ / / / ___/ ___/ __/ __/ __/"
-echo " _\ \/ /_/ / /__/ /__/ _/_\ \_\ \  "
-echo "/___/\____/\___/\___/___/___/___/  "
