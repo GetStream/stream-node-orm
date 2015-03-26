@@ -71,14 +71,14 @@ FeedManager.prototype = {
   },
 
   registerActivityClass: function(model) {
-    this._registeredModels[model.activity_model_reference()] = model;
+    this._registeredModels[model.activityModelReference()] = model;
   },
 
   // functions for future ORM observers
   activityCreated: function(instance) {
-    var activity = instance.create_activity();
+    var activity = instance.createActivity();
     var feedType = instance.activityActorFeed() || this.settings.userFeed;
-    var userId = instance.activity_actor_id();
+    var userId = instance.activityActorId();
     feed = this.getFeed(feedType, userId);
     console.log('publishing activity to feed', feedType, userId);
     feed.addActivity(instance.activity, function(err, response, body) {
@@ -89,7 +89,7 @@ FeedManager.prototype = {
   },
 
   activityDeleted: function(instance) {
-    var activity = instance.create_activity();
+    var activity = instance.createActivity();
     feed = this.getFeed(this.settings.userFeed, activity.actor);
     feed.removeActivity({'foreignId': activity.foreign_id}, function(err, response, body) {
       if (err) console.log(err);

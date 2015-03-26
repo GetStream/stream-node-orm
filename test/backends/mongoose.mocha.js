@@ -13,7 +13,7 @@ var schema = new mongoose.Schema({
 
 StreamMongoose.activitySchema(schema);
 
-schema.methods.activity_actor_prop = function(){
+schema.methods.activityActorProp = function(){
   return 'actor';
 }
 
@@ -27,7 +27,7 @@ describe('Enricher', function() {
         tweet.name = 'test';
         tweet.actor = 'plainActor';
         tweet.save(function(err) {
-            var activity = tweet.create_activity();
+            var activity = tweet.createActivity();
             var enricher = new stream.Enricher();
             enricher.enrichActivities([activity], function(err, enriched){
               enriched.should.length(1);
@@ -54,7 +54,7 @@ describe('Enricher', function() {
             obj.save(function(err) { done()})
           },
           function(){
-            var activities = [tweet1.create_activity(), tweet2.create_activity()];
+            var activities = [tweet1.createActivity(), tweet2.createActivity()];
             enricher.enrichActivities(activities,
               function(err, enriched){
                 enriched.should.length(2);
@@ -71,35 +71,35 @@ describe('Enricher', function() {
 describe('Tweet', function() {
 
     it('should follow model reference naming convention', function() {
-        (Tweet.activity_model_reference()).should.be.exactly('MongooseTweet');
+        (Tweet.activityModelReference()).should.be.exactly('MongooseTweet');
     });
 
     it('should be registered in the manager', function() {
-        var cls = stream.FeedManager.getActivityClass(Tweet.activity_model_reference());
+        var cls = stream.FeedManager.getActivityClass(Tweet.activityModelReference());
         (cls).should.be.exactly(Tweet)
     });
 
-    it('#create_activity().activity_verb', function() {
+    it('#createActivity().activityVerb', function() {
         var tweet = new Tweet({});
         tweet.actor = 'actor';
         tweet.save();
-        var activity = tweet.create_activity();
+        var activity = tweet.createActivity();
         activity.should.have.property('verb', 'Tweet');
     });
 
-    it('#create_activity.activity_object', function() {
+    it('#createActivity.activityObject', function() {
         var tweet = new Tweet({});
         tweet.actor = 'actor';
         tweet.save();
-        var activity = tweet.create_activity();
+        var activity = tweet.createActivity();
         activity.should.have.property('object');
     });
 
-    it('#create_activity.activity_actor', function() {
+    it('#createActivity.activityActor', function() {
         var tweet = new Tweet({});
         tweet.actor = 'actor';
         tweet.save();
-        var activity = tweet.create_activity();
+        var activity = tweet.createActivity();
         activity.should.have.property('actor');
     });
 

@@ -28,7 +28,7 @@ var activityModel = function(Model) {
 
   Model.schema.post('save', function(doc) {
     if (this.wasNew) {
-      stream.FeedManager.activityCreated(doc.create_activity());
+      stream.FeedManager.activityCreated(doc.createActivity());
     }
   });
 
@@ -45,15 +45,15 @@ var activitySchema = function(Schema) {
   extendSchema(Schema, BaseActivity);
 
   // add Mongoose specific proto functions
-  Schema.methods.activity_instance_reference = function() {
+  Schema.methods.activityInstanceReference = function() {
     return this._id;
   }
 
-  Schema.methods.activity_verb = function() {
+  Schema.methods.activityVerb = function() {
     return this.constructor.modelName;
   };
 
-  Schema.statics.activity_model_reference = function() {
+  Schema.statics.activityModelReference = function() {
     return 'Mongoose' + this.modelName;
   }
 

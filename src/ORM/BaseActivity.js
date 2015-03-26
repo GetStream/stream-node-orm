@@ -5,83 +5,82 @@ BaseActivity.methods = {};
 BaseActivity.statics = {};
 
 // Common proto functions
-BaseActivity.methods.activity_get_actor = function() {
-    var actor = this[this.activity_actor_prop()];
+BaseActivity.methods.activityGetActor = function() {
+    var actor = this[this.activityActorProp()];
     if (typeof(actor) === 'undefined'){
         // todo: throw a clear error here
     }
     return actor;
 };
 
-BaseActivity.methods.activity_actor = function() {
-    var actor = this.activity_get_actor();
-    if (typeof(actor.activity_instance_reference) === 'function') {
-        return actor.activity_create_reference(actor);
+BaseActivity.methods.activityActor = function() {
+    var actor = this.activityGetActor();
+    if (typeof(actor.activityInstanceReference) === 'function') {
+        return actor.activityCreateReference(actor);
     } else {
         return actor;
     }
 };
 
-BaseActivity.methods.activity_actor_id = function() {
-    var actor = this.activity_get_actor();
-    if (typeof(actor.activity_instance_reference) === 'function') {
-        return actor.activity_instance_reference(actor);
+BaseActivity.methods.activityActorId = function() {
+    var actor = this.activityGetActor();
+    if (typeof(actor.activityInstanceReference) === 'function') {
+        return actor.activityInstanceReference(actor);
     } else {
         return actor;
     }
 };
 
-BaseActivity.methods.activity_object = function() {
-    return this.activity_create_reference(this);
+BaseActivity.methods.activityObject = function() {
+    return this.activityCreateReference(this);
 };
 
-BaseActivity.methods.activity_foreign_id = function() {
-    return this.activity_create_reference(this);
+BaseActivity.methods.activityForeignId = function() {
+    return this.activityCreateReference(this);
 };
 
-BaseActivity.methods.create_activity = function() {
+BaseActivity.methods.createActivity = function() {
     var activity = {};
-    var extra_data = this.activity_extra_data();
+    var extra_data = this.activityExtraData();
     for (var key in extra_data) {
         activity[key] = extra_data[key];
     }
-    var to = this.activity_notify();
-    if (to) {
-        activity.to = to.map(function(x){return x.id});
+    activity.to = (this.activityNotify() || []).map(function(x){return x.id});
+    activity.actor = this.activityActor();
+    activity.verb = this.activityVerb();
+    activity.object = this.activityObject();
+    activity.foreign_id = this.activityForeignId();
+    if (this.activityTime()) {
+        activity.time = this.activityTime();
     }
-    activity.actor = this.activity_actor();
-    activity.verb = this.activity_verb();
-    activity.object = this.activity_object();
-    activity.foreign_id = this.activity_foreign_id();
-    activity.time = this.activity_time();
     return activity;
 }
 
-BaseActivity.methods.activity_create_reference = function() {
-  return this.constructor.activity_model_reference() + ':' + this.activity_instance_reference();
+BaseActivity.methods.activityCreateReference = function() {
+  return this.constructor.activityModelReference() + ':' + this.activityInstanceReference();
 };
 
 // Backend specific proto functions
-BaseActivity.methods.activity_instance_reference = function() {}
+BaseActivity.methods.activityInstanceReference = function() {}
 
-BaseActivity.statics.activity_model_reference = function() {}
+BaseActivity.statics.activityModelReference = function() {}
 BaseActivity.statics.loadFromStorage = function(objectsIds, callback) {};
 
 // User specific proto functions (with decent defaults)
-BaseActivity.methods.activity_actor_prop = function() {
+BaseActivity.methods.activityActorProp = function() {
     return 'user'
 };
 
-BaseActivity.methods.activity_verb = function() {
+BaseActivity.methods.activityVerb = function() {
     return this.constructor.name;
 };
 
-BaseActivity.methods.activity_extra_data = function() {
+BaseActivity.methods.activityExtraData = function() {
     return {};
 };
 
-BaseActivity.methods.activity_time = function() {};
+BaseActivity.methods.activityTime = function() {};
 
-BaseActivity.methods.activity_notify = function() {};
+BaseActivity.methods.activityNotify = function() {};
 
 module.exports = BaseActivity;
