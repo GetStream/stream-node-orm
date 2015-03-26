@@ -26,6 +26,10 @@ FeedManager.prototype = {
 
   },
 
+  trackingEnabled: function(instance) {
+    return false;
+  },
+
   getUserFeed: function(userId) {
     return this.client.feed(this.settings.userFeed, userId);
   },
@@ -66,33 +70,34 @@ FeedManager.prototype = {
     return this.client.feed(slug, userId);
   },
 
-  getModelClass: function(modelReference) {
+  getActivityClass: function(modelReference) {
     return this._registeredModels[modelReference];
   },
 
-  registerActivityModel: function(model) {
-    this._registeredModels[model.activity_model_reference()] = model.constructor;
+  registerActivityClass: function(model) {
+    this._registeredModels[model.activityModelReference()] = model;
   },
 
-  // functions for future ORM observers
   activityCreated: function(instance) {
-    // placeholder function for now
-    feed = this.getFeed(this.settings.userFeed, instance.userId);
-    feed.addActivity(instance.activity, function(err, response, body) {
-      if (err) console.log(err);
-      console.log(instance.activity);
-      console.log(response.body);
-    });
+    if (this.trackingEnabled(instance)){
+      var activity = instance.createActivity();
+      var feedType = instance.activityActorFeed() || this.settings.userFeed;
+      var userId = instance.activityActorId();
+      feed = this.getFeed(feedType, userId);
+      feed.addActivity(instance.activity, function(err, response, body) {
+        if (err) console.log(err);
+      });
+    }
   },
 
-  activityDeleted: function(activity) {
-    // placeholder function for now
-    console.log(activity);
-    feed = this.getFeed(this.settings.userFeed, activity.actor);
-    feed.removeActivity({'foreignId': activity.foreign_id}, function(err, response, body) {
-      if (err) console.log(err);
-      console.log(response.body);
-    });
+  activityDeleted: function(instance) {
+    if (this.trackingEnabled(instance)){
+      var activity = instance.createActivity();
+      feed = this.getFeed(this.settings.userFeed, activity.actor);
+      feed.removeActivity({'foreignId': activity.foreign_id}, function(err, response, body) {
+        if (err) console.log(err);
+      });
+    }
   }
 
 };

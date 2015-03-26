@@ -1,44 +1,122 @@
+var async = require("async");
 var should = require('should');
 var StreamMongoose = require('../../src/ORM/Mongoose'); 
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 var stream = require('../../src/GetStreamNode.js');
 
-var schema = new mongoose.Schema({ name: 'string', size: 'string' });
-var Tweet = mongoose.model('Tweet', schema);
+mongoose.connect('mongodb://localhost/test');
 
-StreamMongoose.ActivityModel(Tweet);
+var userSchema = Schema({
+  name    : String
+});
+
+var tweetSchema = Schema({
+  text    : String,
+  actor   : { type: Schema.Types.ObjectId, ref: 'User' }
+});
+
+StreamMongoose.activitySchema(tweetSchema);
+
+tweetSchema.statics.pathsToPopulate = function(){
+  return 'actor';
+};
+
+tweetSchema.methods.activityActorProp = function(){
+  return 'actor';
+}
+
+var Tweet = mongoose.model('Tweet', tweetSchema);
+StreamMongoose.activityModel(Tweet);
+
+var User = mongoose.model('User', userSchema);
+
+describe('Enricher', function() {
+
+    before(function(done) {
+      this.actor = new User({'name': 'actor1'});
+      this.actor.save(done());
+    });
+
+    it('enrich one activity', function() {
+        var self = this;
+        var tweet = new Tweet();
+        tweet.text = 'test';
+        tweet.actor = this.actor;
+        tweet.save(function(err) {
+            var activity = tweet.createActivity();
+            var enricher = new stream.Enricher();
+            enricher.enrichActivities([activity], function(err, enriched){
+              enriched.should.length(1);
+              enriched[0].should.have.property('actor');
+              enriched[0]['actor'].should.have.property('_id', self.actor._id);
+              enriched[0].should.have.property('object');
+              enriched[0]['object'].should.have.property('_id', tweet._id);
+              enriched[0]['object'].should.have.property('text', tweet.text);
+            });
+        });
+    });
+
+    it('enrich two activity', function() {
+        var enricher = new stream.Enricher();
+        var tweet1 = new Tweet();
+        tweet1.text = 'test1';
+        tweet1.actor = new User({'name': 'actor1'});
+        var tweet2 = new Tweet();
+        tweet2.text = 'test2';
+        tweet2.actor = new User({'name': 'actor1'});
+
+        async.each([tweet1, tweet2], 
+          function(obj, done){
+            obj.save(function(err) { done()})
+          },
+          function(){
+            var activities = [tweet1.createActivity(), tweet2.createActivity()];
+            enricher.enrichActivities(activities,
+              function(err, enriched){
+                enriched.should.length(2);
+                enriched[0].should.have.property('foreign_id');
+                enriched[1].should.have.property('foreign_id');
+                enriched[0]['foreign_id'].should.not.equal(enriched[1]['foreign_id']);
+              }
+            )}
+          );
+      });
+
+});
 
 describe('Tweet', function() {
 
-    it('should be registered in the manager', function() {
-        var tweet = new Tweet({});
-        (tweet.activity_model_reference()).should.be.exactly('MongooseTweet');
+    it('should follow model reference naming convention', function() {
+        (Tweet.activityModelReference()).should.be.exactly('MongooseTweet');
     });
 
     it('should be registered in the manager', function() {
-        var tweet = new Tweet({});
-        var cls = stream.FeedManager.getModelClass(tweet.activity_model_reference());
+        var cls = stream.FeedManager.getActivityClass(Tweet.activityModelReference());
         (cls).should.be.exactly(Tweet)
     });
 
-    it('#create_activity().activity_verb', function() {
+    it('#createActivity().activityVerb', function() {
         var tweet = new Tweet({});
+        tweet.actor = new User({'name': 'actor1'});
         tweet.save();
-        var activity = tweet.create_activity();
+        var activity = tweet.createActivity();
         activity.should.have.property('verb', 'Tweet');
     });
 
-    it('#create_activity.activity_object', function() {
+    it('#createActivity.activityObject', function() {
         var tweet = new Tweet({});
+        tweet.actor = new User({'name': 'actor1'});
         tweet.save();
-        var activity = tweet.create_activity();
+        var activity = tweet.createActivity();
         activity.should.have.property('object');
     });
 
-    it('#create_activity.activity_actor', function() {
+    it('#createActivity.activityActor', function() {
         var tweet = new Tweet({});
+        tweet.actor = new User({'name': 'actor1'});
         tweet.save();
-        var activity = tweet.create_activity();
+        var activity = tweet.createActivity();
         activity.should.have.property('actor');
     });
 

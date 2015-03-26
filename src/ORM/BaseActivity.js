@@ -1,64 +1,88 @@
 var BaseActivity = function() {
 };
 
+BaseActivity.methods = {};
+BaseActivity.statics = {};
+
 // Common proto functions
-BaseActivity.prototype.activity_actor = function() {
-    var actor = this[this.activity_actor_prop()];
-    return this.activity_create_reference(actor);
+BaseActivity.methods.activityActorFeed = function() {};
+
+BaseActivity.methods.activityGetActor = function() {
+    var actor = this[this.activityActorProp()];
+    if (typeof(actor) === 'undefined'){
+        // todo: throw a clear error here
+    }
+    return actor;
 };
 
-BaseActivity.prototype.activity_object = function() {
-    return this.activity_create_reference(this);
+BaseActivity.methods.activityActor = function() {
+    var actor = this.activityGetActor();
+    if (typeof(actor.activityInstanceReference) === 'function') {
+        return actor.activityCreateReference(actor);
+    } else {
+        return actor;
+    }
 };
 
-BaseActivity.prototype.activity_foreign_id = function() {
-    return this.activity_create_reference(this);
+BaseActivity.methods.activityActorId = function() {
+    var actor = this.activityGetActor();
+    if (typeof(actor.activityInstanceReference) === 'function') {
+        return actor.activityInstanceReference(actor);
+    } else {
+        return actor;
+    }
 };
 
-BaseActivity.prototype.create_activity = function() {
+BaseActivity.methods.activityObject = function() {
+    return this.activityCreateReference(this);
+};
+
+BaseActivity.methods.activityForeignId = function() {
+    return this.activityCreateReference(this);
+};
+
+BaseActivity.methods.createActivity = function() {
     var activity = {};
-    var extra_data = this.activity_extra_data();
+    var extra_data = this.activityExtraData();
     for (var key in extra_data) {
         activity[key] = extra_data[key];
     }
-    var to = this.activity_notify();
-    if (to) {
-        activity.to = to.map(function(x){return x.id});
+    activity.to = (this.activityNotify() || []).map(function(x){return x.id});
+    activity.actor = this.activityActor();
+    activity.verb = this.activityVerb();
+    activity.object = this.activityObject();
+    activity.foreign_id = this.activityForeignId();
+    if (this.activityTime()) {
+        activity.time = this.activityTime();
     }
-    activity.actor = this.activity_actor();
-    activity.verb = this.activity_verb();
-    activity.object = this.activity_object();
-    activity.foreign_id = this.activity_foreign_id();
-    activity.time = this.activity_time();
     return activity;
 }
 
-BaseActivity.prototype.activity_create_reference = function() {
-  return this.activity_model_reference() + ':' + this.activity_instance_reference();
+BaseActivity.methods.activityCreateReference = function() {
+  return this.constructor.activityModelReference() + ':' + this.activityInstanceReference();
 };
 
 // Backend specific proto functions
-BaseActivity.prototype.activity_instance_reference = function() {}
+BaseActivity.methods.activityInstanceReference = function() {}
 
-BaseActivity.prototype.activity_model_reference = function() {}
-
-BaseActivity.prototype.fromDb = function(objectsIds) {};
+BaseActivity.statics.activityModelReference = function() {}
+BaseActivity.statics.loadFromStorage = function(objectsIds, callback) {};
 
 // User specific proto functions (with decent defaults)
-BaseActivity.prototype.activity_actor_prop = function() {
+BaseActivity.methods.activityActorProp = function() {
     return 'user'
 };
 
-BaseActivity.prototype.activity_verb = function() {
+BaseActivity.methods.activityVerb = function() {
     return this.constructor.name;
 };
 
-BaseActivity.prototype.activity_extra_data = function() {
+BaseActivity.methods.activityExtraData = function() {
     return {};
 };
 
-BaseActivity.prototype.activity_time = function() {};
+BaseActivity.methods.activityTime = function() {};
 
-BaseActivity.prototype.activity_notify = function() {};
+BaseActivity.methods.activityNotify = function() {};
 
 module.exports = BaseActivity;
