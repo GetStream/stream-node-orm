@@ -6,8 +6,16 @@ var stream = require('../../src/GetStreamNode.js');
 
 mongoose.connect('mongodb://localhost/test');
 
-var schema = new mongoose.Schema({ name: String });
+var schema = new mongoose.Schema({
+  name: String,
+  actor: String
+});
+
 StreamMongoose.activitySchema(schema);
+
+schema.methods.activity_actor_prop = function(){
+  return 'actor';
+}
 
 var Tweet = mongoose.model('Tweet', schema);
 StreamMongoose.activityModel(Tweet);
@@ -17,6 +25,7 @@ describe('Enricher', function() {
     it('enrich one activity', function() {
         var tweet = new Tweet();
         tweet.name = 'test';
+        tweet.actor = 'plainActor';
         tweet.save(function(err) {
             var activity = tweet.create_activity();
             var enricher = new stream.Enricher();
@@ -35,8 +44,10 @@ describe('Enricher', function() {
         var enricher = new stream.Enricher();
         var tweet1 = new Tweet();
         tweet1.name = 'test1';
+        tweet1.actor = 'plainActor1';
         var tweet2 = new Tweet();
         tweet2.name = 'test2';
+        tweet2.actor = 'plainActor2';
 
         async.each([tweet1, tweet2], 
           function(obj, done){
@@ -70,6 +81,7 @@ describe('Tweet', function() {
 
     it('#create_activity().activity_verb', function() {
         var tweet = new Tweet({});
+        tweet.actor = 'actor';
         tweet.save();
         var activity = tweet.create_activity();
         activity.should.have.property('verb', 'Tweet');
@@ -77,6 +89,7 @@ describe('Tweet', function() {
 
     it('#create_activity.activity_object', function() {
         var tweet = new Tweet({});
+        tweet.actor = 'actor';
         tweet.save();
         var activity = tweet.create_activity();
         activity.should.have.property('object');
@@ -84,6 +97,7 @@ describe('Tweet', function() {
 
     it('#create_activity.activity_actor', function() {
         var tweet = new Tweet({});
+        tweet.actor = 'actor';
         tweet.save();
         var activity = tweet.create_activity();
         activity.should.have.property('actor');

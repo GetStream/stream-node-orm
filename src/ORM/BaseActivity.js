@@ -5,9 +5,30 @@ BaseActivity.methods = {};
 BaseActivity.statics = {};
 
 // Common proto functions
-BaseActivity.methods.activity_actor = function() {
+BaseActivity.methods.activity_get_actor = function() {
     var actor = this[this.activity_actor_prop()];
-    return this.activity_create_reference(actor);
+    if (typeof(actor) === 'undefined'){
+        // todo: throw a clear error here
+    }
+    return actor;
+};
+
+BaseActivity.methods.activity_actor = function() {
+    var actor = this.activity_get_actor();
+    if (typeof(actor.activity_instance_reference) === 'function') {
+        return actor.activity_create_reference(actor);
+    } else {
+        return actor;
+    }
+};
+
+BaseActivity.methods.activity_actor_id = function() {
+    var actor = this.activity_get_actor();
+    if (typeof(actor.activity_instance_reference) === 'function') {
+        return actor.activity_instance_reference(actor);
+    } else {
+        return actor;
+    }
 };
 
 BaseActivity.methods.activity_object = function() {

@@ -76,8 +76,11 @@ FeedManager.prototype = {
 
   // functions for future ORM observers
   activityCreated: function(instance) {
-    // placeholder function for now
-    feed = this.getFeed(this.settings.userFeed, instance.userId);
+    var activity = instance.create_activity();
+    var feedType = instance.activityActorFeed() || this.settings.userFeed;
+    var userId = instance.activity_actor_id();
+    feed = this.getFeed(feedType, userId);
+    console.log('publishing activity to feed', feedType, userId);
     feed.addActivity(instance.activity, function(err, response, body) {
       if (err) console.log(err);
       console.log(instance.activity);
@@ -85,7 +88,8 @@ FeedManager.prototype = {
     });
   },
 
-  activityDeleted: function(activity) {
+  activityDeleted: function(instance) {
+    var activity = instance.create_activity();
     feed = this.getFeed(this.settings.userFeed, activity.actor);
     feed.removeActivity({'foreignId': activity.foreign_id}, function(err, response, body) {
       if (err) console.log(err);
