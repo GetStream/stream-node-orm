@@ -27,8 +27,8 @@ var activityModel = function(Model) {
   });
 
   Model.schema.post('save', function(doc) {
-    if (this.wasNew) {
-      stream.FeedManager.activityCreated(doc.createActivity());
+    if (doc.wasNew) {
+      stream.FeedManager.activityCreated(doc);
     }
   });
 

@@ -80,7 +80,6 @@ FeedManager.prototype = {
     var feedType = instance.activityActorFeed() || this.settings.userFeed;
     var userId = instance.activityActorId();
     feed = this.getFeed(feedType, userId);
-    console.log('publishing activity to feed', feedType, userId);
     feed.addActivity(instance.activity, function(err, response, body) {
       if (err) console.log(err);
       console.log(instance.activity);
