@@ -18,7 +18,6 @@ function extendSchema(base, mixin) {
   return base;
 }
 
-
 var activityModel = function(Model) {
   // plug into mongoose post save and post delete
   Model.schema.pre('save', function(next) {
@@ -49,24 +48,29 @@ var activitySchema = function(Schema) {
     return this._id;
   }
 
-  Schema.methods.activityVerb = function() {
-    return this.constructor.modelName;
-  };
-
   Schema.statics.activityModelReference = function() {
     return 'Mongoose' + this.modelName;
   }
 
+  Schema.methods.activityVerb = function() {
+    return this.constructor.modelName;
+  };
+
+  Schema.statics.pathsToPopulate = function() {
+    return [];
+  };
+
   Schema.statics.loadFromStorage = function(objectsIds, callback) {
     var found = {};
-    this.find({_id: {$in: objectsIds}}).exec(function(err, docs){
+    var paths = this.pathsToPopulate();
+    console.log(paths);
+    this.find({_id: {$in: objectsIds}}).populate(paths).exec(function(err, docs){
       for (var i in docs){
         found[docs[i]._id] = docs[i];
       }
       callback(err, found);
     });
   };
-
 };
 
 module.exports.activityModel = activityModel;

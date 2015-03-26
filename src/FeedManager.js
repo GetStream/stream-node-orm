@@ -26,6 +26,10 @@ FeedManager.prototype = {
 
   },
 
+  trackingEnabled: function(instance) {
+    return false;
+  },
+
   getUserFeed: function(userId) {
     return this.client.feed(this.settings.userFeed, userId);
   },
@@ -74,26 +78,26 @@ FeedManager.prototype = {
     this._registeredModels[model.activityModelReference()] = model;
   },
 
-  // functions for future ORM observers
   activityCreated: function(instance) {
-    var activity = instance.createActivity();
-    var feedType = instance.activityActorFeed() || this.settings.userFeed;
-    var userId = instance.activityActorId();
-    feed = this.getFeed(feedType, userId);
-    feed.addActivity(instance.activity, function(err, response, body) {
-      if (err) console.log(err);
-      console.log(instance.activity);
-      console.log(response.body);
-    });
+    if (this.trackingEnabled(instance)){
+      var activity = instance.createActivity();
+      var feedType = instance.activityActorFeed() || this.settings.userFeed;
+      var userId = instance.activityActorId();
+      feed = this.getFeed(feedType, userId);
+      feed.addActivity(instance.activity, function(err, response, body) {
+        if (err) console.log(err);
+      });
+    }
   },
 
   activityDeleted: function(instance) {
-    var activity = instance.createActivity();
-    feed = this.getFeed(this.settings.userFeed, activity.actor);
-    feed.removeActivity({'foreignId': activity.foreign_id}, function(err, response, body) {
-      if (err) console.log(err);
-      console.log(response.body);
-    });
+    if (this.trackingEnabled(instance)){
+      var activity = instance.createActivity();
+      feed = this.getFeed(this.settings.userFeed, activity.actor);
+      feed.removeActivity({'foreignId': activity.foreign_id}, function(err, response, body) {
+        if (err) console.log(err);
+      });
+    }
   }
 
 };

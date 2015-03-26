@@ -2,40 +2,57 @@ var async = require("async");
 var should = require('should');
 var StreamMongoose = require('../../src/ORM/Mongoose'); 
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 var stream = require('../../src/GetStreamNode.js');
 
 mongoose.connect('mongodb://localhost/test');
 
-var schema = new mongoose.Schema({
-  name: String,
-  actor: String
+var userSchema = Schema({
+  name    : String
 });
 
-StreamMongoose.activitySchema(schema);
+var tweetSchema = Schema({
+  text    : String,
+  actor   : { type: Schema.Types.ObjectId, ref: 'User' }
+});
 
-schema.methods.activityActorProp = function(){
+StreamMongoose.activitySchema(tweetSchema);
+
+tweetSchema.statics.pathsToPopulate = function(){
+  return 'actor';
+};
+
+tweetSchema.methods.activityActorProp = function(){
   return 'actor';
 }
 
-var Tweet = mongoose.model('Tweet', schema);
+var Tweet = mongoose.model('Tweet', tweetSchema);
 StreamMongoose.activityModel(Tweet);
+
+var User = mongoose.model('User', userSchema);
 
 describe('Enricher', function() {
 
+    before(function(done) {
+      this.actor = new User({'name': 'actor1'});
+      this.actor.save(done());
+    });
+
     it('enrich one activity', function() {
+        var self = this;
         var tweet = new Tweet();
-        tweet.name = 'test';
-        tweet.actor = 'plainActor';
+        tweet.text = 'test';
+        tweet.actor = this.actor;
         tweet.save(function(err) {
             var activity = tweet.createActivity();
             var enricher = new stream.Enricher();
             enricher.enrichActivities([activity], function(err, enriched){
               enriched.should.length(1);
-              console.log(enriched[0])
               enriched[0].should.have.property('actor');
+              enriched[0]['actor'].should.have.property('_id', self.actor._id);
               enriched[0].should.have.property('object');
               enriched[0]['object'].should.have.property('_id', tweet._id);
-              enriched[0]['object'].should.have.property('name', tweet.name);
+              enriched[0]['object'].should.have.property('text', tweet.text);
             });
         });
     });
@@ -43,11 +60,11 @@ describe('Enricher', function() {
     it('enrich two activity', function() {
         var enricher = new stream.Enricher();
         var tweet1 = new Tweet();
-        tweet1.name = 'test1';
-        tweet1.actor = 'plainActor1';
+        tweet1.text = 'test1';
+        tweet1.actor = new User({'name': 'actor1'});
         var tweet2 = new Tweet();
-        tweet2.name = 'test2';
-        tweet2.actor = 'plainActor2';
+        tweet2.text = 'test2';
+        tweet2.actor = new User({'name': 'actor1'});
 
         async.each([tweet1, tweet2], 
           function(obj, done){
@@ -81,7 +98,7 @@ describe('Tweet', function() {
 
     it('#createActivity().activityVerb', function() {
         var tweet = new Tweet({});
-        tweet.actor = 'actor';
+        tweet.actor = new User({'name': 'actor1'});
         tweet.save();
         var activity = tweet.createActivity();
         activity.should.have.property('verb', 'Tweet');
@@ -89,7 +106,7 @@ describe('Tweet', function() {
 
     it('#createActivity.activityObject', function() {
         var tweet = new Tweet({});
-        tweet.actor = 'actor';
+        tweet.actor = new User({'name': 'actor1'});
         tweet.save();
         var activity = tweet.createActivity();
         activity.should.have.property('object');
@@ -97,7 +114,7 @@ describe('Tweet', function() {
 
     it('#createActivity.activityActor', function() {
         var tweet = new Tweet({});
-        tweet.actor = 'actor';
+        tweet.actor = new User({'name': 'actor1'});
         tweet.save();
         var activity = tweet.createActivity();
         activity.should.have.property('actor');

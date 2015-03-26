@@ -10,7 +10,7 @@ Enricher.prototype = {
     this.fields = fields || ['actor', 'object'];
   },
   isReference: function(value) {
-    return (typeof(value) !== 'undefined' && value.indexOf(':') !== -1 && value.split(':').length) == 2;
+    return (typeof(value) === 'string' && value.split(':').length == 2);
   },
   getClassFromRef: function(ref) {
     return stream.FeedManager.getActivityClass(ref);
