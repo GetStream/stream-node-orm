@@ -20,8 +20,6 @@ function extendSchema(base, mixin) {
 
 
 var activityModel = function(Model) {
-  stream.FeedManager.registeractivity(Model);
-
   // plug into mongoose post save and post delete
   Model.schema.pre('save', function(next) {
     this.wasNew = this.isNew;
@@ -37,6 +35,8 @@ var activityModel = function(Model) {
   Model.schema.post('remove', function(doc) {
     stream.FeedManager.activityDeleted(doc);
   });
+
+  stream.FeedManager.registerActivityClass(Model);
 }
 
 

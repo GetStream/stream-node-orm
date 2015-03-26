@@ -13,7 +13,7 @@ Enricher.prototype = {
     return (typeof(value) !== 'undefined' && value.indexOf(':') !== -1 && value.split(':').length) == 2;
   },
   getClassFromRef: function(ref) {
-    return stream.FeedManager.getModelClass(ref);
+    return stream.FeedManager.getActivityClass(ref);
   },
   collectReferences: function(activities) {
     var modelReferences = {};

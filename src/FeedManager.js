@@ -66,11 +66,11 @@ FeedManager.prototype = {
     return this.client.feed(slug, userId);
   },
 
-  getModelClass: function(modelReference) {
+  getActivityClass: function(modelReference) {
     return this._registeredModels[modelReference];
   },
 
-  registeractivity: function(model) {
+  registerActivityClass: function(model) {
     this._registeredModels[model.activity_model_reference()] = model;
   },
 
@@ -86,8 +86,6 @@ FeedManager.prototype = {
   },
 
   activityDeleted: function(activity) {
-    // placeholder function for now
-    console.log(activity);
     feed = this.getFeed(this.settings.userFeed, activity.actor);
     feed.removeActivity({'foreignId': activity.foreign_id}, function(err, response, body) {
       if (err) console.log(err);
