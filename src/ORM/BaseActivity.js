@@ -1,21 +1,24 @@
 var BaseActivity = function() {
 };
 
+BaseActivity.methods = {};
+BaseActivity.statics = {};
+
 // Common proto functions
-BaseActivity.prototype.activity_actor = function() {
+BaseActivity.methods.activity_actor = function() {
     var actor = this[this.activity_actor_prop()];
     return this.activity_create_reference(actor);
 };
 
-BaseActivity.prototype.activity_object = function() {
+BaseActivity.methods.activity_object = function() {
     return this.activity_create_reference(this);
 };
 
-BaseActivity.prototype.activity_foreign_id = function() {
+BaseActivity.methods.activity_foreign_id = function() {
     return this.activity_create_reference(this);
 };
 
-BaseActivity.prototype.create_activity = function() {
+BaseActivity.methods.create_activity = function() {
     var activity = {};
     var extra_data = this.activity_extra_data();
     for (var key in extra_data) {
@@ -33,32 +36,31 @@ BaseActivity.prototype.create_activity = function() {
     return activity;
 }
 
-BaseActivity.prototype.activity_create_reference = function() {
-  return this.activity_model_reference() + ':' + this.activity_instance_reference();
+BaseActivity.methods.activity_create_reference = function() {
+  return this.constructor.activity_model_reference() + ':' + this.activity_instance_reference();
 };
 
 // Backend specific proto functions
-BaseActivity.prototype.activity_instance_reference = function() {}
+BaseActivity.methods.activity_instance_reference = function() {}
 
-BaseActivity.prototype.activity_model_reference = function() {}
-
-BaseActivity.prototype.fromDb = function(objectsIds) {};
+BaseActivity.statics.activity_model_reference = function() {}
+BaseActivity.statics.loadFromStorage = function(objectsIds, callback) {};
 
 // User specific proto functions (with decent defaults)
-BaseActivity.prototype.activity_actor_prop = function() {
+BaseActivity.methods.activity_actor_prop = function() {
     return 'user'
 };
 
-BaseActivity.prototype.activity_verb = function() {
+BaseActivity.methods.activity_verb = function() {
     return this.constructor.name;
 };
 
-BaseActivity.prototype.activity_extra_data = function() {
+BaseActivity.methods.activity_extra_data = function() {
     return {};
 };
 
-BaseActivity.prototype.activity_time = function() {};
+BaseActivity.methods.activity_time = function() {};
 
-BaseActivity.prototype.activity_notify = function() {};
+BaseActivity.methods.activity_notify = function() {};
 
 module.exports = BaseActivity;

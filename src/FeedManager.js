@@ -70,8 +70,8 @@ FeedManager.prototype = {
     return this._registeredModels[modelReference];
   },
 
-  registerActivityModel: function(model) {
-    this._registeredModels[model.activity_model_reference()] = model.constructor;
+  registeractivity: function(model) {
+    this._registeredModels[model.activity_model_reference()] = model;
   },
 
   // functions for future ORM observers

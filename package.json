@@ -7,15 +7,16 @@
   "main": "./src/GetStreamNode.js",
   "dependencies": {
     "getstream": "^2.1.7",
-    "mongoose-auto-increment": "^3.2.0"
+    "mongoose": "^3.0.0",
+    "async": "^0.9.0"
   },
   "devDependencies": {
-    "mocha"           : "^1.20.1",
-    "should"          : "^4.0.0",
-    "better-assert"   : "^1.0.0"
+    "mocha": "^1.20.1",
+    "should": "^4.0.0",
+    "better-assert": "^1.0.0"
   },
   "scripts": {
-    "test": "NODE_ENV=test bash test/index.sh"
+    "test": "bash test/index.sh"
   },
   "engine": "node >= 0.8"
 }
