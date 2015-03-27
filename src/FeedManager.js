@@ -27,7 +27,7 @@ FeedManager.prototype = {
   },
 
   trackingEnabled: function(instance) {
-    return true;
+    return process.env.NODE_ENV ? false : true;
   },
 
   getUserFeed: function(userId) {
