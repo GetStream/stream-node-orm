@@ -40,6 +40,8 @@ Enricher.prototype = {
       function(modelRef, done){
         var refs = references[modelRef];
         var modelClass = self.getClassFromRef(modelRef);
+        // TODO: send this as an error
+        if (typeof(modelClass) === 'undefined') return done();
         if (typeof(objects[modelRef]) === 'undefined') objects[modelRef] = {};
         modelClass.loadFromStorage(refs, function(err, objectsIds) {
           for(var k in objectsIds){
