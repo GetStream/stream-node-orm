@@ -27,7 +27,7 @@ FeedManager.prototype = {
   },
 
   trackingEnabled: function(instance) {
-    return false;
+    return true;
   },
 
   getUserFeed: function(userId) {
@@ -84,7 +84,7 @@ FeedManager.prototype = {
       var feedType = instance.activityActorFeed() || this.settings.userFeed;
       var userId = instance.activityActorId();
       feed = this.getFeed(feedType, userId);
-      feed.addActivity(instance.activity, function(err, response, body) {
+      feed.addActivity(activity, function(err, response, body) {
         if (err) console.log(err);
       });
     }
