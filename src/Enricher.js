@@ -70,8 +70,14 @@ Enricher.prototype = {
           var modelRef = activity[field].split(":")[0];
           var instanceRef = activity[field].split(":")[1];
           if (objects[modelRef] && objects[modelRef][instanceRef]){
-            activities[i][field] = objects[modelRef][instanceRef];
+            obj = JSON.parse(JSON.stringify(objects[modelRef][instanceRef]));
+
+            for (key in obj) {
+              activities[i][key] = obj[key];
+            }
+            // activities[i][field] = objects[modelRef][instanceRef];
           }
+          // console.log(activities[i]);
         }
 
         callback(err, activities);
