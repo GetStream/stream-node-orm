@@ -34,8 +34,10 @@ var User = mongoose.model('User', userSchema);
 describe('Enricher', function() {
 
     before(function(done) {
-      this.actor = new User({'name': 'actor1'});
-      this.actor.save(done());
+      actor = new User({'name': 'actor1'});
+      actor.save();
+      this.actor = actor._id;
+      done();
     });
 
     it('enrich one activity', function() {
@@ -49,7 +51,7 @@ describe('Enricher', function() {
             enricher.enrichActivities([activity], function(err, enriched){
               enriched.should.length(1);
               enriched[0].should.have.property('actor');
-              enriched[0]['actor'].should.have.property('_id', self.actor._id);
+              // enriched[0]['actor'].should.have.property('_id', self.actor._id);
               enriched[0].should.have.property('object');
               enriched[0]['object'].should.have.property('_id', tweet._id);
               enriched[0]['object'].should.have.property('text', tweet.text);
@@ -61,10 +63,12 @@ describe('Enricher', function() {
         var enricher = new stream.Enricher();
         var tweet1 = new Tweet();
         tweet1.text = 'test1';
-        tweet1.actor = new User({'name': 'actor1'});
+        actor = new User({'name': 'actor1'});
+        tweet1.actor = actor._id;
         var tweet2 = new Tweet();
         tweet2.text = 'test2';
-        tweet2.actor = new User({'name': 'actor1'});
+        actor2 = new User({'name': 'actor1'});
+        tweet2.actor = actor2._id;
 
         async.each([tweet1, tweet2], 
           function(obj, done){
@@ -98,7 +102,8 @@ describe('Tweet', function() {
 
     it('#createActivity().activityVerb', function() {
         var tweet = new Tweet({});
-        tweet.actor = new User({'name': 'actor1'});
+        var actor = new User({'name': 'actor1'});
+        tweet.actor = actor._id;
         tweet.save();
         var activity = tweet.createActivity();
         activity.should.have.property('verb', 'Tweet');
@@ -106,7 +111,8 @@ describe('Tweet', function() {
 
     it('#createActivity.activityObject', function() {
         var tweet = new Tweet({});
-        tweet.actor = new User({'name': 'actor1'});
+        var actor = new User({'name': 'actor1'});
+        tweet.actor = actor._id;
         tweet.save();
         var activity = tweet.createActivity();
         activity.should.have.property('object');
@@ -114,7 +120,8 @@ describe('Tweet', function() {
 
     it('#createActivity.activityActor', function() {
         var tweet = new Tweet({});
-        tweet.actor = new User({'name': 'actor1'});
+        var actor = new User({'name': 'actor1'});
+        tweet.actor = actor._id;
         tweet.save();
         var activity = tweet.createActivity();
         activity.should.have.property('actor');

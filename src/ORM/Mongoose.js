@@ -38,7 +38,6 @@ var activityModel = function(Model) {
   stream.FeedManager.registerActivityClass(Model);
 }
 
-
 var activitySchema = function(Schema) {
   // add base proto functions from BaseActivity
   extendSchema(Schema, BaseActivity);
@@ -49,7 +48,7 @@ var activitySchema = function(Schema) {
   }
 
   Schema.statics.activityModelReference = function() {
-    return 'Mongoose' + this.modelName;
+    return this.modelName;
   }
 
   Schema.methods.activityVerb = function() {
@@ -68,6 +67,7 @@ var activitySchema = function(Schema) {
       for (var i in docs){
         found[docs[i]._id] = docs[i];
       }
+      // console.log(found);
       callback(err, found);
     });
   };
