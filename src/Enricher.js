@@ -40,6 +40,8 @@ Enricher.prototype = {
       function(modelRef, done){
         var refs = references[modelRef];
         var modelClass = self.getClassFromRef(modelRef);
+        // TODO: send this as an error
+        if (typeof(modelClass) === 'undefined') return done();
         if (typeof(objects[modelRef]) === 'undefined') objects[modelRef] = {};
         modelClass.loadFromStorage(refs, function(err, objectsIds) {
           for(var k in objectsIds){
@@ -67,10 +69,6 @@ Enricher.prototype = {
           if(!self.isReference(activity[field])) continue;
           var modelRef = activity[field].split(":")[0];
           var instanceRef = activity[field].split(":")[1];
-          console.log(field);
-          console.log(activity);
-          console.log(objects[modelRef][instanceRef]);
-          // console.log(activity);
           if (objects[modelRef] && objects[modelRef][instanceRef]){
             activities[i][field] = objects[modelRef][instanceRef];
           }

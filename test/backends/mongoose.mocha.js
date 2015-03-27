@@ -36,7 +36,7 @@ describe('Enricher', function() {
     before(function(done) {
       actor = new User({'name': 'actor1'});
       actor.save();
-      this.actor = actor._id;
+      this.actor = actor;
       done();
     });
 
@@ -91,6 +91,13 @@ describe('Enricher', function() {
 
 describe('Tweet', function() {
 
+    before(function(done) {
+      actor = new User({'name': 'actor1'});
+      actor.save();
+      this.actor = actor;
+      done();
+    });
+
     it('should follow model reference naming convention', function() {
         (Tweet.activityModelReference()).should.be.exactly('MongooseTweet');
     });
@@ -102,8 +109,7 @@ describe('Tweet', function() {
 
     it('#createActivity().activityVerb', function() {
         var tweet = new Tweet({});
-        var actor = new User({'name': 'actor1'});
-        tweet.actor = actor._id;
+        tweet.actor = this.actor;
         tweet.save();
         var activity = tweet.createActivity();
         activity.should.have.property('verb', 'Tweet');
@@ -111,8 +117,7 @@ describe('Tweet', function() {
 
     it('#createActivity.activityObject', function() {
         var tweet = new Tweet({});
-        var actor = new User({'name': 'actor1'});
-        tweet.actor = actor._id;
+        tweet.actor = this.actor;
         tweet.save();
         var activity = tweet.createActivity();
         activity.should.have.property('object');
@@ -120,8 +125,7 @@ describe('Tweet', function() {
 
     it('#createActivity.activityActor', function() {
         var tweet = new Tweet({});
-        var actor = new User({'name': 'actor1'});
-        tweet.actor = actor._id;
+        tweet.actor = this.actor;
         tweet.save();
         var activity = tweet.createActivity();
         activity.should.have.property('actor');

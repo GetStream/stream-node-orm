@@ -16,7 +16,7 @@
     "better-assert": "^1.0.0"
   },
   "scripts": {
-    "test": "bash test/index.sh"
+    "test": "NODE_ENV=test bash test/index.sh"
   },
   "engine": "node >= 0.8"
 }
