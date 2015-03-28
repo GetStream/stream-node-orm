@@ -85,7 +85,7 @@ FeedManager.prototype = {
       var userId = instance.activityActorId();
       feed = this.getFeed(feedType, userId);
       feed.addActivity(activity, function(err, response, body) {
-        if (err) console.log(err);
+        if (err) console.log('err: ', err);
       });
     }
   },
@@ -95,7 +95,7 @@ FeedManager.prototype = {
       var activity = instance.createActivity();
       feed = this.getFeed(this.settings.userFeed, activity.actor);
       feed.removeActivity({'foreignId': activity.foreign_id}, function(err, response, body) {
-        if (err) console.log(err);
+        if (err) console.log('err: ', err);
       });
     }
   }

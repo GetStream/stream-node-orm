@@ -58,7 +58,7 @@ Enricher.prototype = {
   enrichActivities: function(activities, callback) {
     var self = this;
     if (activities.length == 0) {
-      return activities;
+      callback(null, activities);
     }
     var references = this.collectReferences(activities);
     this.retreiveObjects(references, function(err, objects) {
@@ -79,19 +79,60 @@ Enricher.prototype = {
           }
           // console.log(activities[i]);
         }
-
-        callback(err, activities);
       }
+
+      callback(err, activities);
     });
   },
   enrichAggregatedActivities: function(aggregatedActivities, callback) {
-    if (activities.length == 0) {
-      return activities;
+    if (aggregatedActivities.length == 0) {
+      callback(null, aggregatedActivities);
     }
-    for (key in aggregatedActivities) {
-      aggregatedActivities[key]['activities'] = this.collectReferences(aggregatedActivities[key]['activities']);
-    }
-    return activities;
+
+    self = this;
+
+    async.each(Object.keys(aggregatedActivities),
+      function(activityRef, done){
+        // console.log('pre activities', aggregatedActivities[activityRef]['activities']);
+        // console.log('prev activityRef', activityRef);
+
+        self.enrichActivities(aggregatedActivities[activityRef]['activities'], function(err, aggregated) {
+          // console.log('post activityRef', activityRef);
+          aggregatedActivities[activityRef]['activities'] = aggregated;
+          // console.log('post activities', aggregatedActivities[activityRef]['activities']);
+          done(err);
+        });
+
+        // var refs = references[modelRef];
+        // var modelClass = self.getClassFromRef(modelRef);
+        // // TODO: send this as an error
+        // if (typeof(modelClass) === 'undefined') return done();
+        // if (typeof(objects[modelRef]) === 'undefined') objects[modelRef] = {};
+        // modelClass.loadFromStorage(refs, function(err, objectsIds) {
+        //   for(var k in objectsIds){
+        //     objects[modelRef][k] = objectsIds[k];
+        //   }
+        //   done(err);
+        // });
+      },
+      function(err){
+        // console.log(aggregatedActivities);
+        callback(err, aggregatedActivities);
+      }
+    );
+
+    // for (var key in aggregatedActivities) {
+    //   // console.log(aggregatedActivities[key]['activities']);
+    //   console.log(key);
+    //   var activity_id = key;
+
+    //   this.enrichActivities(aggregatedActivities[key]['activities'], function(err, aggregated) {
+    //     console.log('activity_id', activity_id);
+    //     aggregatedActivities[key]['activities'] = aggregated;
+    //   });
+    // }
+
+    // callback(null, aggregatedActivities);
   }
 }
 

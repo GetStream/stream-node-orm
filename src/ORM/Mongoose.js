@@ -48,7 +48,7 @@ var activitySchema = function(Schema) {
   }
 
   Schema.statics.activityModelReference = function() {
-    return 'Mongoose' + this.modelName;
+    return this.modelName;
   }
 
   Schema.methods.activityVerb = function() {
@@ -62,7 +62,6 @@ var activitySchema = function(Schema) {
   Schema.statics.loadFromStorage = function(objectsIds, callback) {
     var found = {};
     var paths = this.pathsToPopulate();
-    console.log(paths);
     this.find({_id: {$in: objectsIds}}).populate(paths).exec(function(err, docs){
       for (var i in docs){
         found[docs[i]._id] = docs[i];
