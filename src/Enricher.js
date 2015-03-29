@@ -75,9 +75,7 @@ Enricher.prototype = {
             for (key in obj) {
               activities[i][key] = obj[key];
             }
-            // activities[i][field] = objects[modelRef][instanceRef];
           }
-          // console.log(activities[i]);
         }
       }
 
@@ -93,46 +91,15 @@ Enricher.prototype = {
 
     async.each(Object.keys(aggregatedActivities),
       function(activityRef, done){
-        // console.log('pre activities', aggregatedActivities[activityRef]['activities']);
-        // console.log('prev activityRef', activityRef);
-
         self.enrichActivities(aggregatedActivities[activityRef]['activities'], function(err, aggregated) {
-          // console.log('post activityRef', activityRef);
           aggregatedActivities[activityRef]['activities'] = aggregated;
-          // console.log('post activities', aggregatedActivities[activityRef]['activities']);
           done(err);
         });
-
-        // var refs = references[modelRef];
-        // var modelClass = self.getClassFromRef(modelRef);
-        // // TODO: send this as an error
-        // if (typeof(modelClass) === 'undefined') return done();
-        // if (typeof(objects[modelRef]) === 'undefined') objects[modelRef] = {};
-        // modelClass.loadFromStorage(refs, function(err, objectsIds) {
-        //   for(var k in objectsIds){
-        //     objects[modelRef][k] = objectsIds[k];
-        //   }
-        //   done(err);
-        // });
       },
       function(err){
-        // console.log(aggregatedActivities);
         callback(err, aggregatedActivities);
       }
     );
-
-    // for (var key in aggregatedActivities) {
-    //   // console.log(aggregatedActivities[key]['activities']);
-    //   console.log(key);
-    //   var activity_id = key;
-
-    //   this.enrichActivities(aggregatedActivities[key]['activities'], function(err, aggregated) {
-    //     console.log('activity_id', activity_id);
-    //     aggregatedActivities[key]['activities'] = aggregated;
-    //   });
-    // }
-
-    // callback(null, aggregatedActivities);
   }
 }
 
