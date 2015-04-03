@@ -7,9 +7,7 @@ var FeedManager = function () {
 FeedManager.prototype = {
 
   initialize: function(settings) {
-
     this.settings = settings;
-    this._registeredModels = {};
 
     options = {};
 
@@ -70,17 +68,10 @@ FeedManager.prototype = {
     return this.client.feed(slug, userId);
   },
 
-  getActivityClass: function(modelReference) {
-    return this._registeredModels[modelReference];
-  },
-
-  registerActivityClass: function(model) {
-    this._registeredModels[model.activityModelReference()] = model;
-  },
-
   activityCreated: function(instance) {
     if (this.trackingEnabled(instance)){
       var activity = instance.createActivity();
+      instance.getStreamBackend().serializeActivities([activity]);
       var feedType = instance.activityActorFeed() || this.settings.userFeed;
       var userId = instance.activityActorId();
       feed = this.getFeed(feedType, userId);

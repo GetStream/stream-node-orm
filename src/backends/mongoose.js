@@ -1,6 +1,35 @@
 var stream = require('../GetStreamNode.js');
-var BaseActivity = require('../ORM/BaseActivity.js');
+var BaseActivity = require('./activity.js');
+var util = require("util");
+var mongoose = require('mongoose');
 
+function Backend() {}
+
+util.inherits(Backend, stream.BaseBackend);
+
+
+Backend.prototype.serializeValue = function(value) {
+  if (typeof(value._id) != "undefined") {
+    return value.constructor.modelName + ':' + value._id;
+  } else {
+    return value;
+  }
+}
+
+Backend.prototype.loadFromStorage = function(modelClass, objectsIds, callback) {
+  var found = {};
+  var paths = modelClass.pathsToPopulate();
+  modelClass.find({_id: {$in: objectsIds}}).populate(paths).exec(function(err, docs){
+    for (var i in docs){
+      found[docs[i]._id] = docs[i];
+    }
+    callback(err, found);
+  });
+};
+
+Backend.prototype.getClassFromRef = function(ref) {
+  return mongoose.model(ref);
+}
 
 function extendSchema(base, mixin) {
   if (typeof base.methods === 'undefined') {
@@ -34,8 +63,6 @@ var activityModel = function(Model) {
   Model.schema.post('remove', function(doc) {
     stream.FeedManager.activityDeleted(doc);
   });
-
-  stream.FeedManager.registerActivityClass(Model);
 }
 
 var activitySchema = function(Schema) {
@@ -43,12 +70,16 @@ var activitySchema = function(Schema) {
   extendSchema(Schema, BaseActivity);
 
   // add Mongoose specific proto functions
+  Schema.methods.getStreamBackend = function() {
+    return new Backend();
+  }
+
   Schema.methods.activityInstanceReference = function() {
     return this._id;
   }
 
   Schema.statics.activityModelReference = function() {
-    return 'Mongoose' + this.modelName;
+    return this.modelName;
   }
 
   Schema.methods.activityVerb = function() {
@@ -58,19 +89,8 @@ var activitySchema = function(Schema) {
   Schema.statics.pathsToPopulate = function() {
     return [];
   };
-
-  Schema.statics.loadFromStorage = function(objectsIds, callback) {
-    var found = {};
-    var paths = this.pathsToPopulate();
-    console.log(paths);
-    this.find({_id: {$in: objectsIds}}).populate(paths).exec(function(err, docs){
-      for (var i in docs){
-        found[docs[i]._id] = docs[i];
-      }
-      callback(err, found);
-    });
-  };
 };
 
 module.exports.activityModel = activityModel;
 module.exports.activitySchema = activitySchema;
+module.exports.Backend = Backend;
