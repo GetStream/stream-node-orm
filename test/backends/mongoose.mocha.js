@@ -1,6 +1,6 @@
 var async = require("async");
 var should = require('should');
-var StreamMongoose = require('../../src/ORM/Mongoose'); 
+var StreamMongoose = require('../../src/backends/Mongoose'); 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var stream = require('../../src/GetStreamNode.js');
@@ -40,6 +40,19 @@ describe('Enricher', function() {
       done();
     });
 
+    it('serialise objects into refs', function() {
+        var self = this;
+        var tweet = new Tweet();
+        tweet.text = 'test';
+        tweet.actor = this.actor;
+        tweet.save(function(err) {
+            var activity = tweet.createActivity();
+            tweet.getStreamBackend().serializeActivities([activity]);
+            (activity).should.have.property('actor', 'User:' + tweet.actor._id);
+            (activity).should.have.property('object', 'Tweet:' + tweet._id);
+        });
+    });
+
     it('enrich one activity', function() {
         var self = this;
         var tweet = new Tweet();
@@ -47,11 +60,11 @@ describe('Enricher', function() {
         tweet.actor = this.actor;
         tweet.save(function(err) {
             var activity = tweet.createActivity();
-            var enricher = new stream.Enricher();
+            var enricher = new StreamMongoose.Backend();
             enricher.enrichActivities([activity], function(err, enriched){
               enriched.should.length(1);
               enriched[0].should.have.property('actor');
-              // enriched[0]['actor'].should.have.property('_id', self.actor._id);
+              enriched[0]['actor'].should.have.property('_id', self.actor._id);
               enriched[0].should.have.property('object');
               enriched[0]['object'].should.have.property('_id', tweet._id);
               enriched[0]['object'].should.have.property('text', tweet.text);
@@ -60,7 +73,7 @@ describe('Enricher', function() {
     });
 
     it('enrich two activity', function() {
-        var enricher = new stream.Enricher();
+        var enricher = new StreamMongoose.Backend();
         var tweet1 = new Tweet();
         tweet1.text = 'test1';
         actor = new User({'name': 'actor1'});
@@ -99,12 +112,13 @@ describe('Tweet', function() {
     });
 
     it('should follow model reference naming convention', function() {
-        (Tweet.activityModelReference()).should.be.exactly('MongooseTweet');
+        (Tweet.activityModelReference()).should.be.exactly('Tweet');
     });
 
-    it('should be registered in the manager', function() {
-        var cls = stream.FeedManager.getActivityClass(Tweet.activityModelReference());
-        (cls).should.be.exactly(Tweet)
+    it('should be able to serialise to ref', function() {
+      var tweet = new Tweet({});
+      var ref = tweet.getStreamBackend().serializeValue(tweet);
+      (ref).should.be.exactly('Tweet:'+tweet._id);
     });
 
     it('#createActivity().activityVerb', function() {

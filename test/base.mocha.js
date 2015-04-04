@@ -1,18 +1,12 @@
 var should = require('should');
-var Enricher = require('../src/Enricher.js');
+var BaseBackend = require('../src/backends/base.js');
 
-describe('Enricher', function() {
+describe('StreamBackend', function() {
 
     it('should have right properties', function() {
-        new Enricher().should.have.property('setFields');
-        new Enricher().should.have.property('collectReferences');
-        new Enricher().should.have.property('enrichActivities');
-        new Enricher().should.have.property('enrichAggregatedActivities');
-    });
-
-    it('#setFields()', function() {
-        var enricher = new Enricher();
-        enricher.should.have.property('fields', ['actor', 'object']);
+        new BaseBackend().should.have.property('collectReferences');
+        new BaseBackend().should.have.property('enrichActivities');
+        new BaseBackend().should.have.property('enrichAggregatedActivities');
     });
 
     it('#collectReferences()', function() {
