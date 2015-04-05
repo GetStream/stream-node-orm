@@ -1,6 +1,6 @@
 var async = require("async");
 
-var BaseBackend = function(fields, options) {
+var BaseBackend = function() {
 }
 
 BaseBackend.prototype = {
@@ -26,12 +26,9 @@ BaseBackend.prototype = {
   iterActivityFieldsWithReferences: function(activities, fn) {
     var self = this;
     this.iterActivityFields(activities, this.isReference, function(args) {
-      for (var i in args) {
-        var arg = args[i];
-        var field = arg['activity'];
-        arg['modelRef'] = arg['activity'][field].split(":")[0];
-        arg['instanceRef'] = arg['activity'][field].split(":")[1];
-      }
+      var field = args['field'];
+      args['modelRef'] = args['activity'][field].split(":")[0];
+      args['instanceRef'] = args['activity'][field].split(":")[1];
       fn(args);
     });
   },
@@ -55,7 +52,7 @@ BaseBackend.prototype = {
         var modelClass = self.getClassFromRef(modelRef);
         if (typeof(modelClass) === 'undefined') return done();
         if (typeof(objects[modelRef]) === 'undefined') objects[modelRef] = {};
-        this.loadFromStorage(modelClass, refs, function(err, objectsIds) {
+        self.loadFromStorage(modelClass, refs, function(err, objectsIds) {
           for(var k in objectsIds){
             objects[modelRef][k] = objectsIds[k];
           }
@@ -69,9 +66,6 @@ BaseBackend.prototype = {
   },
   enrichActivities: function(activities, callback) {
     var self = this;
-    if (activities.length == 0) {
-      return activities;
-    }
     var references = this.collectReferences(activities);
     this.retreiveObjects(references, function(err, objects) {
       self.iterActivityFieldsWithReferences(activities, function(args) {
@@ -83,13 +77,16 @@ BaseBackend.prototype = {
     });
   },
   enrichAggregatedActivities: function(aggregatedActivities, callback) {
-    if (activities.length == 0) {
-      return activities;
+    var references = {};
+    var enrichments = [];
+    var self = this;
+    for (var i in aggregatedActivities) {
+      var aggregated = aggregatedActivities[i];
+      enrichments.push(function(done){
+        self.enrichActivities(aggregated['activities'], done);
+      });
     }
-    for (key in aggregatedActivities) {
-      aggregatedActivities[key]['activities'] = this.collectReferences(aggregatedActivities[key]['activities']);
-    }
-    return activities;
+    async.parallel(enrichments, function(err){callback(err, aggregatedActivities)});
   },
   serializeActivities: function(activities){
     var self = this;

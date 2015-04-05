@@ -18,7 +18,10 @@ Backend.prototype.serializeValue = function(value) {
 
 Backend.prototype.loadFromStorage = function(modelClass, objectsIds, callback) {
   var found = {};
-  var paths = modelClass.pathsToPopulate();
+  var paths = [];
+  if (typeof(modelClass.pathsToPopulate) === 'function') {
+    var paths = modelClass.pathsToPopulate();
+  }
   modelClass.find({_id: {$in: objectsIds}}).populate(paths).exec(function(err, docs){
     for (var i in docs){
       found[docs[i]._id] = docs[i];
@@ -47,27 +50,24 @@ function extendSchema(base, mixin) {
   return base;
 }
 
-var activityModel = function(Model) {
-  // plug into mongoose post save and post delete
-  Model.schema.pre('save', function(next) {
+var activitySchema = function(Schema) {
+  // add base proto functions from BaseActivity
+  extendSchema(Schema, BaseActivity);
+
+  Schema.pre('save', function(next) {
     this.wasNew = this.isNew;
     next();
   });
 
-  Model.schema.post('save', function(doc) {
+  Schema.post('save', function(doc) {
     if (doc.wasNew) {
       stream.FeedManager.activityCreated(doc);
     }
   });
 
-  Model.schema.post('remove', function(doc) {
+  Schema.post('remove', function(doc) {
     stream.FeedManager.activityDeleted(doc);
   });
-}
-
-var activitySchema = function(Schema) {
-  // add base proto functions from BaseActivity
-  extendSchema(Schema, BaseActivity);
 
   // add Mongoose specific proto functions
   Schema.methods.getStreamBackend = function() {
@@ -91,6 +91,5 @@ var activitySchema = function(Schema) {
   };
 };
 
-module.exports.activityModel = activityModel;
 module.exports.activitySchema = activitySchema;
 module.exports.Backend = Backend;
