@@ -37,7 +37,6 @@ tweetSchema.methods.activityActorProp = function() {
 }
 
 var Tweet = mongoose.model('Tweet', tweetSchema);
-
 var User = mongoose.model('User', userSchema);
 var Link = mongoose.model('Link', linkSchema);
 var backend = new StreamMongoose.Backend();
@@ -56,21 +55,28 @@ describe('Backend', function() {
 
     it('enrich aggregated activity complex mix', function(done) {
         var self = this;
-        var tweet = new Tweet();
-        tweet.text = 'test';
-        tweet.actor = this.actor;
-        tweet.save(function(err) {
-            var activity = tweet.createActivity();
-            backend.serializeActivities([activity]);
+        var tweet1 = new Tweet();
+        var tweet2 = new Tweet();
+        tweet1.text = 'tweet1';
+        tweet1.actor = this.actor;
+        tweet2.text = 'tweet2';
+        tweet2.actor = this.actor;
+        var tweets = [tweet1, tweet2];
+        Tweet.create(tweets, function(err) {
+            var activities = [tweet1.createActivity(), tweet2.createActivity()];
+            backend.serializeActivities(activities);
             var aggregatedActivities = [
-              {'actor_count': 1, 'activities': [activity]},
+              {'actor_count': 1, 'activities': activities},
             ];
             backend.enrichAggregatedActivities(aggregatedActivities, function(err, enriched){
               enriched.should.length(1);
-              enriched[0].should.have.property('activities').with.lengthOf(1);
+              enriched[0].should.have.property('activities').with.lengthOf(2);
               enriched[0]['activities'][0].should.have.property('actor');
               enriched[0]['activities'][0].should.have.property('object');
               enriched[0]['activities'][0].should.have.property('verb');
+              enriched[0]['activities'][1].should.have.property('actor');
+              enriched[0]['activities'][1].should.have.property('object');
+              enriched[0]['activities'][1].should.have.property('verb');
               done();
             });
         });
