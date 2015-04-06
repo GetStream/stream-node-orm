@@ -5,7 +5,9 @@ BaseActivity.methods = {};
 BaseActivity.statics = {};
 
 // Common proto functions
-BaseActivity.methods.activityActorFeed = function() {};
+BaseActivity.methods.activityActorFeed = function() {
+    return null;
+};
 
 BaseActivity.methods.activityGetActor = function() {
     var actor = this[this.activityActorProp()];

@@ -146,6 +146,8 @@ describe('Backend', function() {
         tweet.actor = this.actor;
         tweet.save(function(err) {
             var activity = tweet.createActivity();
+            backend.serializeActivities([activity]);
+            activity = JSON.parse(JSON.stringify(activity));
             backend.enrichActivities([activity], function(err, enriched){
               enriched.should.length(1);
               enriched[0].should.have.property('actor');
@@ -153,6 +155,7 @@ describe('Backend', function() {
               enriched[0].should.have.property('object');
               enriched[0]['object'].should.have.property('_id', tweet._id);
               enriched[0]['object'].should.have.property('text', tweet.text);
+              enriched[0].should.have.property('foreign_id', 'Tweet:'+tweet._id);
               done();
             });
         });

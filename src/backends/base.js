@@ -69,7 +69,7 @@ BaseBackend.prototype = {
     var references = this.collectReferences(activities);
     this.retreiveObjects(references, function(err, objects) {
       self.iterActivityFieldsWithReferences(activities, function(args) {
-        if (objects[args.modelRef] && objects[args.modelRef][args.instanceRef]){
+        if (objects[args.modelRef] && objects[args.modelRef][args.instanceRef] && args.field !== 'foreign_id'){
           args.activity[args.field] = objects[args.modelRef][args.instanceRef];
         }
       });
