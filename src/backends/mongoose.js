@@ -1,7 +1,7 @@
-var stream = require('../GetStreamNode.js');
 var BaseActivity = require('./activity.js');
 var util = require("util");
 var mongoose = require('mongoose');
+var stream = require('../GetStreamNode.js');
 
 function Backend() {}
 
