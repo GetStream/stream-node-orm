@@ -28,6 +28,13 @@ tweetSchema.statics.pathsToPopulate = function() {
   return ['actor', 'link'];
 };
 
+tweetSchema.methods.activityNotify = function() {
+  return [
+    stream.FeedManager.getFeed('notification', '1'),
+    stream.FeedManager.getFeed('notification', '2')
+  ];
+}
+
 tweetSchema.methods.activityExtraData = function() {
   return {'bg': this.bg, 'link': this.link};
 }
@@ -266,6 +273,14 @@ describe('Tweet', function() {
 
     it('should follow model reference naming convention', function() {
         (Tweet.activityModelReference()).should.be.exactly('Tweet');
+    });
+
+    it('check to target field', function() {
+      var tweet = new Tweet({});
+      tweet.actor = this.actor;
+      tweet.save();
+      var activity = tweet.createActivity();
+      activity.should.have.property('to',  ['notification:1', 'notification:2']);
     });
 
     it('should be able to serialise to ref', function() {
