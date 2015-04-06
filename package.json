@@ -16,7 +16,7 @@
     "better-assert": "^1.0.0"
   },
   "scripts": {
-    "test": "NODE_ENV=test bash test/index.sh"
+    "test": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' NODE_ENV=test bash test/index.sh"
   },
   "engine": "node >= 0.8"
 }
