@@ -5,7 +5,9 @@ BaseActivity.methods = {};
 BaseActivity.statics = {};
 
 // Common proto functions
-BaseActivity.methods.activityActorFeed = function() {};
+BaseActivity.methods.activityActorFeed = function() {
+    return null;
+};
 
 BaseActivity.methods.activityGetActor = function() {
     var actor = this[this.activityActorProp()];
@@ -17,11 +19,7 @@ BaseActivity.methods.activityGetActor = function() {
 
 BaseActivity.methods.activityActor = function() {
     var actor = this.activityGetActor();
-    if (typeof(actor.activityInstanceReference) === 'function') {
-        return actor.activityCreateReference(actor);
-    } else {
-        return actor;
-    }
+    return actor;
 };
 
 BaseActivity.methods.activityActorId = function() {
@@ -34,11 +32,11 @@ BaseActivity.methods.activityActorId = function() {
 };
 
 BaseActivity.methods.activityObject = function() {
-    return this.activityCreateReference(this);
+    return this;
 };
 
 BaseActivity.methods.activityForeignId = function() {
-    return this.activityCreateReference(this);
+    return this;
 };
 
 BaseActivity.methods.createActivity = function() {
@@ -58,17 +56,12 @@ BaseActivity.methods.createActivity = function() {
     return activity;
 }
 
-BaseActivity.methods.activityCreateReference = function() {
-  return this.constructor.activityModelReference() + ':' + this.activityInstanceReference();
+// User specific proto functions (with decent defaults)
+BaseActivity.methods.getStreamBackend = function() {
+    var stream = require('../GetStreamNode.js');
+    return new stream.BaseBackend();
 };
 
-// Backend specific proto functions
-BaseActivity.methods.activityInstanceReference = function() {}
-
-BaseActivity.statics.activityModelReference = function() {}
-BaseActivity.statics.loadFromStorage = function(objectsIds, callback) {};
-
-// User specific proto functions (with decent defaults)
 BaseActivity.methods.activityActorProp = function() {
     return 'user'
 };
