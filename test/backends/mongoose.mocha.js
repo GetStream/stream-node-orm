@@ -253,7 +253,6 @@ describe('Backend', function() {
             )}
           );
       });
-
 });
 
 describe('Tweet', function() {
