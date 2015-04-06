@@ -7,3 +7,4 @@ var StreamMongoose = require('./backends/mongoose.js');
 // TODO: make sure this happens only once!
 module.exports.FeedManager = new FeedManager(settings);
 module.exports.BaseBackend = BaseBackend;
+module.exports.StreamMongoose = StreamMongoose;
