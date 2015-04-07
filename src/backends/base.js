@@ -73,9 +73,7 @@ BaseBackend.prototype = {
     this.retreiveObjects(references, function(err, objects) {
       self.iterActivityFieldsWithReferences(activities, function(args) {
         if (objects[args.modelRef] && objects[args.modelRef][args.instanceRef] && args.field !== 'foreign_id'){
-          for (var key in objects[args.modelRef][args.instanceRef]) {
-            args.activity[key] = objects[args.modelRef][args.instanceRef][key];
-          }
+          args.activity[args.field] = objects[args.modelRef][args.instanceRef];
         }
       });
       callback(err, activities);
