@@ -60,6 +60,12 @@ describe('Backend', function() {
       done();
     });
 
+    it('enrich missing model', function(done) {
+    });
+
+    it('dont enrich origin field', function(done) {
+    });
+
     it('enrich aggregated activity complex mix', function(done) {
         var self = this;
         var tweet1 = new Tweet();
