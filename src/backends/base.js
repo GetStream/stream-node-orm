@@ -73,23 +73,39 @@ BaseBackend.prototype = {
     this.retreiveObjects(references, function(err, objects) {
       self.iterActivityFieldsWithReferences(activities, function(args) {
         if (objects[args.modelRef] && objects[args.modelRef][args.instanceRef] && args.field !== 'foreign_id'){
-          args.activity[args.field] = objects[args.modelRef][args.instanceRef];
+          for (var key in objects[args.modelRef][args.instanceRef]) {
+            args.activity[key] = objects[args.modelRef][args.instanceRef][key];
+          }
         }
       });
       callback(err, activities);
     });
   },
   enrichAggregatedActivities: function(aggregatedActivities, callback) {
-    var references = {};
-    var enrichments = [];
-    var self = this;
-    for (var i in aggregatedActivities) {
-      var aggregated = aggregatedActivities[i];
-      enrichments.push(function(done){
-        self.enrichActivities(aggregated['activities'], done);
-      });
-    }
-    async.parallel(enrichments, function(err){callback(err, aggregatedActivities)});
+    // var references = {};
+    // var enrichments = [];
+    // var self = this;
+    // for (var i in aggregatedActivities) {
+    //   var aggregated = aggregatedActivities[i];
+    //   enrichments.push(function(done){
+    //     self.enrichActivities(aggregated['activities'], done);
+    //   });
+    // }
+    // async.parallel(enrichments, function(err){callback(err, aggregatedActivities)});
+
+    self = this;
+
+    async.each(Object.keys(aggregatedActivities),
+      function(activityRef, done){
+        self.enrichActivities(aggregatedActivities[activityRef]['activities'], function(err, aggregated) {
+          aggregatedActivities[activityRef]['activities'] = aggregated;
+          done(err);
+        });
+      },
+      function(err){
+        callback(err, aggregatedActivities);
+      }
+    );
   },
   serializeActivities: function(activities){
     var self = this;
