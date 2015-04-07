@@ -4,14 +4,17 @@ var BaseBackend = function() {
 }
 
 BaseBackend.prototype = {
-  isReference: function(value) {
+  isReference: function(field, value) {
+    if (field === 'origin' || field === 'foreign_id') {
+      return false;
+    }
     return (typeof(value) === 'string' && value.split(':').length == 2);
   },
   iterActivityFields: function(activities, filter, fn) {
     for (var i in activities) {
       var activity = activities[i];
       for (var field in activity) {
-        if(!filter(activity[field])) continue;
+        if(!filter(field, activity[field])) continue;
         var args = {
           'activity': activity,
           'field': field
@@ -21,7 +24,7 @@ BaseBackend.prototype = {
     }
   },
   iterActivityFieldsWithObjects: function(activities, fn) {
-    this.iterActivityFields(activities, function(value){ return (typeof(value) === 'object');}, fn);
+    this.iterActivityFields(activities, function(field, value){ return (typeof(value) === 'object');}, fn);
   },
   iterActivityFieldsWithReferences: function(activities, fn) {
     var self = this;

@@ -68,11 +68,7 @@ describe('Backend', function() {
         var activity = {'origin': 'user:42'};
         backend.enrichActivities([activity], function(err, enriched){
           enriched.should.length(1);
-          enriched[0].should.have.property('actor');
-          enriched[0]['actor'].should.have.property('_id', self.actor._id);
-          enriched[0].should.have.property('object');
-          enriched[0]['object'].should.have.property('_id', tweet._id);
-          enriched[0]['object'].should.have.property('text', tweet.text);
+          enriched[0].should.have.property('origin', 'user:42');
           done();
         });
     });
