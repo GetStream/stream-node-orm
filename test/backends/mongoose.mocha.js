@@ -60,6 +60,19 @@ describe('Backend', function() {
       done();
     });
 
+    it('enrich missing model', function(done) {
+      done();
+    });
+
+    it('dont enrich origin field', function(done) {
+        var activity = {'origin': 'user:42'};
+        backend.enrichActivities([activity], function(err, enriched){
+          enriched.should.length(1);
+          enriched[0].should.have.property('origin', 'user:42');
+          done();
+        });
+    });
+
     it('enrich aggregated activity complex mix', function(done) {
         var self = this;
         var tweet1 = new Tweet();
