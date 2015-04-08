@@ -63,7 +63,8 @@ describe('Backend', function() {
     it('serialise null', function(done) {
       var activity = {'object': null};
       backend.serializeActivities([activity]);
-      backend.enrichActivities([activity], function(err, enriched){
+      backend.enrichActivities([activity], function(err, enriched) {
+        should.not.exist(err);
         enriched.should.length(1);
         enriched[0].should.have.property('object', null);
         done();
@@ -72,21 +73,21 @@ describe('Backend', function() {
 
     it('enrich missing model', function(done) {
       var activity = {'object': 'user:42'};
-      backend.enrichActivities([activity], function(err, enriched){
+      backend.enrichActivities([activity], function(err, enriched) {
+        (err).should.be.an.instanceOf(Error);
+        done();
+      });
+    });
+
+    it('dont enrich origin field', function(done) {
+      var activity = {'origin': 'user:42'};
+      backend.enrichActivities([activity], function(err, enriched) {
+        should.not.exist(err);
         enriched.should.length(1);
         enriched[0].should.have.property('origin', 'user:42');
         done();
       });
     });
-
-    // it('dont enrich origin field', function(done) {
-    //   var activity = {'origin': 'user:42'};
-    //   backend.enrichActivities([activity], function(err, enriched){
-    //     enriched.should.length(1);
-    //     enriched[0].should.have.property('origin', 'user:42');
-    //     done();
-    //   });
-    // });
 
     it('enrich aggregated activity complex mix', function(done) {
         var self = this;
@@ -98,12 +99,14 @@ describe('Backend', function() {
         tweet2.actor = this.actor;
         var tweets = [tweet1, tweet2];
         Tweet.create(tweets, function(err) {
+            should.not.exist(err);
             var activities = [tweet1.createActivity(), tweet2.createActivity()];
             backend.serializeActivities(activities);
             var aggregatedActivities = [
               {'actor_count': 1, 'activities': activities},
             ];
-            backend.enrichAggregatedActivities(aggregatedActivities, function(err, enriched){
+            backend.enrichAggregatedActivities(aggregatedActivities, function(err, enriched) {
+              should.not.exist(err);
               enriched.should.length(1);
               enriched[0].should.have.property('activities').with.lengthOf(2);
               enriched[0]['activities'][0].should.have.property('actor');
@@ -123,12 +126,14 @@ describe('Backend', function() {
         tweet.text = 'test';
         tweet.actor = this.actor;
         tweet.save(function(err) {
+            should.not.exist(err);
             var activity = tweet.createActivity();
             backend.serializeActivities([activity]);
             var aggregatedActivities = [
               {'actor_count': 1, 'activities': [activity]},
             ];
-            backend.enrichAggregatedActivities(aggregatedActivities, function(err, enriched){
+            backend.enrichAggregatedActivities(aggregatedActivities, function(err, enriched) {
+              should.not.exist(err);
               enriched.should.length(1);
               enriched[0].should.have.property('activities').with.lengthOf(1);
               enriched[0]['activities'][0].should.have.property('actor');
@@ -145,13 +150,15 @@ describe('Backend', function() {
         tweet.text = 'test';
         tweet.actor = this.actor;
         tweet.save(function(err) {
+            should.not.exist(err);
             var activity = tweet.createActivity();
             backend.serializeActivities([activity]);
             var aggregatedActivities = [
               {'actor_count': 1, 'activities': [activity]},
               {'actor_count': 1, 'activities': [activity, activity]},
             ];
-            backend.enrichAggregatedActivities(aggregatedActivities, function(err, enriched){
+            backend.enrichAggregatedActivities(aggregatedActivities, function(err, enriched) {
+              should.not.exist(err);
               enriched.should.length(2);
               enriched[0].should.have.property('activities').with.lengthOf(1);
               enriched[0]['activities'][0].should.have.property('actor');
@@ -173,17 +180,15 @@ describe('Backend', function() {
         tweet.text = 'test';
         tweet.actor = this.actor;
         tweet.save(function(err) {
+            should.not.exist(err);
             var activity = tweet.createActivity();
             backend.serializeActivities([activity]);
             activity = JSON.parse(JSON.stringify(activity));
-            backend.enrichActivities([activity], function(err, enriched){
+            backend.enrichActivities([activity], function(err, enriched) {
+              should.not.exist(err);
               enriched.should.length(1);
               enriched[0].should.have.property('actor');
               enriched[0]['actor'].should.have.property('_id', self.actor._id);
-              // object doesn't exist. the enricher replaces the fields from the activity
-              // enriched[0].should.have.property('object');
-              // enriched[0]['object'].should.have.property('_id', tweet._id);
-              // enriched[0]['object'].should.have.property('text', tweet.text);
               enriched[0].should.have.property('foreign_id', 'Tweet:'+tweet._id);
               done();
             });
@@ -198,8 +203,10 @@ describe('Backend', function() {
         tweet.actor = this.actor;
         tweet.link = this.link;
         tweet.save(function(err) {
+            should.not.exist(err);
             var activity = tweet.createActivity();
-            backend.enrichActivities([activity], function(err, enriched){
+            backend.enrichActivities([activity], function(err, enriched) {
+              should.not.exist(err);
               enriched.should.length(1);
               enriched[0].should.have.property('actor');
               enriched[0]['actor'].should.have.property('_id', self.actor._id);
@@ -222,6 +229,7 @@ describe('Backend', function() {
         tweet.actor = this.actor;
         tweet.link = this.link;
         tweet.save(function(err) {
+            should.not.exist(err);
             var activity = tweet.createActivity();
             tweet.getStreamBackend().serializeActivities([activity]);
             (activity).should.have.property('actor', 'User:' + tweet.actor._id);
@@ -238,6 +246,7 @@ describe('Backend', function() {
         tweet.text = 'test';
         tweet.actor = this.actor;
         tweet.save(function(err) {
+            should.not.exist(err);
             var activity = tweet.createActivity();
             tweet.getStreamBackend().serializeActivities([activity]);
             (activity).should.have.property('actor', 'User:' + tweet.actor._id);
@@ -252,8 +261,10 @@ describe('Backend', function() {
         tweet.text = 'test';
         tweet.actor = this.actor;
         tweet.save(function(err) {
+            should.not.exist(err);
             var activity = tweet.createActivity();
             backend.enrichActivities([activity], function(err, enriched){
+              should.not.exist(err);
               enriched.should.length(1);
               enriched[0].should.have.property('actor');
               enriched[0]['actor'].should.have.property('_id', self.actor._id);
