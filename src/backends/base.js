@@ -80,30 +80,19 @@ BaseBackend.prototype = {
     });
   },
   enrichAggregatedActivities: function(aggregatedActivities, callback) {
-    // var references = {};
-    // var enrichments = [];
-    // var self = this;
-    // for (var i in aggregatedActivities) {
-    //   var aggregated = aggregatedActivities[i];
-    //   enrichments.push(function(done){
-    //     self.enrichActivities(aggregated['activities'], done);
-    //   });
-    // }
-    // async.parallel(enrichments, function(err){callback(err, aggregatedActivities)});
-
-    self = this;
-
-    async.each(Object.keys(aggregatedActivities),
-      function(activityRef, done){
-        self.enrichActivities(aggregatedActivities[activityRef]['activities'], function(err, aggregated) {
-          aggregatedActivities[activityRef]['activities'] = aggregated;
-          done(err);
+    var references = {};
+    var enrichments = [];
+    var self = this;
+    for (var i in aggregatedActivities) {
+      var aggregated = aggregatedActivities[i];
+      enrichments.push(function(done){
+        self.enrichActivities(aggregated['activities'], function(err, results) {
+          done(err, aggregated);
         });
-      },
-      function(err){
-        callback(err, aggregatedActivities);
-      }
-    );
+      });
+    }
+
+    async.parallel(enrichments, callback);
   },
   serializeActivities: function(activities){
     var self = this;
