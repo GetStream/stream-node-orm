@@ -100,10 +100,13 @@ BaseBackend.prototype = {
     for (var i in aggregatedActivities) {
       var aggregated = aggregatedActivities[i];
       enrichments.push(function(done){
-        self.enrichActivities(aggregated['activities'], done);
+        self.enrichActivities(aggregated['activities'], function(err, results) {
+          done(err, aggregated);
+        });
       });
     }
-    async.parallel(enrichments, function(err){callback(err, aggregatedActivities)});
+
+    async.parallel(enrichments, callback);
   },
   serializeActivities: function(activities){
     var self = this;
