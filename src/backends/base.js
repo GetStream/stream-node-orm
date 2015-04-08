@@ -88,7 +88,7 @@ BaseBackend.prototype = {
   },
   enrichAggregatedActivities: function(aggregatedActivities, callback) {
     try {
-      this._enrichActivities(aggregatedActivities, callback);
+      this._enrichAggregatedActivities(aggregatedActivities, callback);
     } catch (err) {
       callback(err, aggregatedActivities);
     }
