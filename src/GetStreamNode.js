@@ -4,6 +4,7 @@ var settings = config();
 var BaseBackend = require('./backends/base.js');
 
 // TODO: make sure this happens only once!
+// appears to be happening once only : )
 module.exports.FeedManager = new FeedManager(settings);
 module.exports.BaseBackend = BaseBackend;
 module.exports.mongoose = require('./backends/mongoose.js');
