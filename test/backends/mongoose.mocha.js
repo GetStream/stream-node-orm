@@ -180,9 +180,10 @@ describe('Backend', function() {
               enriched.should.length(1);
               enriched[0].should.have.property('actor');
               enriched[0]['actor'].should.have.property('_id', self.actor._id);
-              enriched[0].should.have.property('object');
-              enriched[0]['object'].should.have.property('_id', tweet._id);
-              enriched[0]['object'].should.have.property('text', tweet.text);
+              // object doesn't exist. the enricher replaces the fields from the activity
+              // enriched[0].should.have.property('object');
+              // enriched[0]['object'].should.have.property('_id', tweet._id);
+              // enriched[0]['object'].should.have.property('text', tweet.text);
               enriched[0].should.have.property('foreign_id', 'Tweet:'+tweet._id);
               done();
             });
