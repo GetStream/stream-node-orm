@@ -105,8 +105,7 @@ BaseBackend.prototype = {
         });
       });
     }
-
-    async.parallel(enrichments, callback);
+    async.parallel(enrichments, function(err) { callback(err, aggregatedActivities); });
   },
   serializeActivities: function(activities){
     var self = this;

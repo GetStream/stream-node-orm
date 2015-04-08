@@ -115,6 +115,9 @@ describe('Backend', function() {
               enriched[0]['activities'][1].should.have.property('actor');
               enriched[0]['activities'][1].should.have.property('object');
               enriched[0]['activities'][1].should.have.property('verb');
+
+              (enriched[0]['activities'][1].object._id).should.not.equal((enriched[0]['activities'][0].object._id));
+
               done();
             });
         });
