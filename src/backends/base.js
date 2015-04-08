@@ -68,6 +68,13 @@ BaseBackend.prototype = {
     );
   },
   enrichActivities: function(activities, callback) {
+    try {
+      this._enrichActivities(activities, callback);
+    } catch (err) {
+      callback(err, activities);
+    }
+  },
+  _enrichActivities: function(activities, callback) {
     var self = this;
     var references = this.collectReferences(activities);
     this.retreiveObjects(references, function(err, objects) {
@@ -80,6 +87,13 @@ BaseBackend.prototype = {
     });
   },
   enrichAggregatedActivities: function(aggregatedActivities, callback) {
+    try {
+      this._enrichActivities(aggregatedActivities, callback);
+    } catch (err) {
+      callback(err, aggregatedActivities);
+    }
+  },
+  _enrichAggregatedActivities: function(aggregatedActivities, callback) {
     var references = {};
     var enrichments = [];
     var self = this;
