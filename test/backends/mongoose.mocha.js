@@ -100,24 +100,29 @@ describe('Backend', function() {
         var tweets = [tweet1, tweet2];
         Tweet.create(tweets, function(err) {
             should.not.exist(err);
-            var activities = [tweet1.createActivity(), tweet2.createActivity()];
+            var activities = [tweet1.createActivity()];
+            var activities2 = [tweet2.createActivity()];
             backend.serializeActivities(activities);
+            backend.serializeActivities(activities2);
             var aggregatedActivities = [
               {'actor_count': 1, 'activities': activities},
+              {'actor_count': 1, 'activities': activities2},
             ];
             backend.enrichAggregatedActivities(aggregatedActivities, function(err, enriched) {
               should.not.exist(err);
-              enriched.should.length(1);
-              enriched[0].should.have.property('activities').with.lengthOf(2);
-              enriched[0]['activities'][0].should.have.property('actor');
-              enriched[0]['activities'][0].should.have.property('object');
-              enriched[0]['activities'][0].should.have.property('verb');
-              enriched[0]['activities'][1].should.have.property('actor');
-              enriched[0]['activities'][1].should.have.property('object');
-              enriched[0]['activities'][1].should.have.property('verb');
-
-              (enriched[0]['activities'][1].object._id).should.not.equal((enriched[0]['activities'][0].object._id));
-
+              enriched.should.length(2);
+              var firstAggregation = enriched[0];
+              var secondAggregation = enriched[1];
+              firstAggregation.should.have.property('activities').with.lengthOf(1);
+              firstAggregation['activities'][0].should.have.property('actor');
+              firstAggregation['activities'][0].should.have.property('object');
+              firstAggregation['activities'][0].object.should.have.property('_id');
+              firstAggregation['activities'][0].should.have.property('verb');
+              secondAggregation['activities'][0].should.have.property('actor');
+              secondAggregation['activities'][0].should.have.property('object');
+              secondAggregation['activities'][0].object.should.have.property('_id');
+              secondAggregation['activities'][0].should.have.property('verb');
+              (firstAggregation['activities'][0].object._id).should.not.equal((secondAggregation['activities'][0].object._id));
               done();
             });
         });

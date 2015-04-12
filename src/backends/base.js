@@ -98,12 +98,14 @@ BaseBackend.prototype = {
     var enrichments = [];
     var self = this;
     for (var i in aggregatedActivities) {
-      var aggregated = aggregatedActivities[i];
-      enrichments.push(function(done){
-        self.enrichActivities(aggregated['activities'], function(err, results) {
-          done(err, aggregated);
-        });
-      });
+      enrichments.push(
+        function(aggregated){
+          return function(done) {
+            self.enrichActivities(aggregated['activities'], function(err, results) {
+              done(err, aggregated);
+            });
+          }
+        }(aggregatedActivities[i]))
     }
     async.parallel(enrichments, function(err) { callback(err, aggregatedActivities); });
   },
