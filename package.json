@@ -6,7 +6,7 @@
   "contributors":[
   {
     "name" : "Mario Delgado",
-    "email": "mariodel@gmail.com"
+    "email": "mariodel@gmail.com"    
   }],
   "license": "MIT",
   "main": "./src/index.js",
