@@ -3,7 +3,7 @@ var should = require('should');
 var StreamMongoose = require('../../src/backends/mongoose.js'); 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var stream = require('../../src/GetStreamNode.js');
+var stream = require('../../src/index.js');
 
 mongoose.connect('mongodb://localhost/test');
 

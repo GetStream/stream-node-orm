@@ -58,7 +58,7 @@ BaseActivity.methods.createActivity = function() {
 
 // User specific proto functions (with decent defaults)
 BaseActivity.methods.getStreamBackend = function() {
-    var stream = require('../GetStreamNode.js');
+    var stream = require('../index.js');
     return new stream.BaseBackend();
 };
 
