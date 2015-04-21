@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "description": "Build newsfeeds and activity feeds on node.js using getstream.io",
   "author": "Tommaso Barbugli <tbarbugli@gmail.com> (http://getstream.io/)",
+  "contributors":[
+  {
+    "name" : "Mario Delgado",
+    "email": "mariodel@gmail.com"
+  }],
   "license": "MIT",
   "main": "./src/index.js",
   "dependencies": {
