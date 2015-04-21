@@ -5,11 +5,11 @@
 
 ## Install
 
-. Install getstream-node via `npm install getstream-node` for your application
+. Install getstream-node via `npm install getstream-node` for your application   
 . Copy `getstream.js` config file from `node_modules/getstream-node` into the root directory of
-   your application
-. Edit `getstream.js` and set your API keys (https://getstream.io/dashboard)
-. Add `require('getstream-node');` early on in your application code
+   your application  
+. Edit `getstream.js` and set your API keys (https://getstream.io/dashboard)  
+. Add `require('getstream-node');` early on in your application code 
 
 If you wish to keep the configuration for the module separate from your
 application, the module will look for getstream.json in the directory referenced
@@ -54,6 +54,7 @@ Automatically populate paths:
 tweetSchema.statics.pathsToPopulate = function() {
   return ['actor', 'link'];
 };
+```
 
 Use custom attribute for the actor field:
 
