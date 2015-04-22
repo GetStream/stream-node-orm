@@ -1,13 +1,14 @@
 {
   "name": "getstream-node",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Build newsfeeds and activity feeds on node.js using getstream.io",
   "author": "Tommaso Barbugli <tbarbugli@gmail.com> (http://getstream.io/)",
-  "contributors":[
-  {
-    "name" : "Mario Delgado",
-    "email": "mariodel@gmail.com"    
-  }],
+  "contributors": [
+    {
+      "name": "Mario Delgado",
+      "email": "mariodel@gmail.com"
+    }
+  ],
   "license": "MIT",
   "main": "./src/index.js",
   "dependencies": {
@@ -22,6 +23,8 @@
   "scripts": {
     "test": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' NODE_ENV=test bash test/index.sh"
   },
-  "engines": { "node": ">=0.6.19" },
+  "engines": {
+    "node": ">=0.6.19"
+  },
   "homepage": "http://getstream.io"
 }
