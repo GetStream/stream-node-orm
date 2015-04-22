@@ -1,12 +1,14 @@
 var BaseActivity = require('./activity.js');
 var util = require("util");
-var mongoose = require('mongoose');
 var stream = require('../index.js');
 
 function Backend() {}
 
-util.inherits(Backend, stream.BaseBackend);
+function setupMongoose(m) {
+  Backend.prototype.getMongoose = function () { return m };
+}
 
+util.inherits(Backend, stream.BaseBackend);
 
 Backend.prototype.serializeValue = function(value) {
   if (typeof(value._id) != "undefined") {
@@ -31,7 +33,12 @@ Backend.prototype.loadFromStorage = function(modelClass, objectsIds, callback) {
 };
 
 Backend.prototype.getClassFromRef = function(ref) {
+  var mongoose = this.getMongoose();
   return mongoose.model(ref);
+}
+
+Backend.prototype.getIdFromRef = function(ref) {
+  return ref.split(':')[1];
 }
 
 function extendSchema(base, mixin) {
@@ -93,3 +100,4 @@ var activitySchema = function(Schema) {
 
 module.exports.activitySchema = activitySchema;
 module.exports.Backend = Backend;
+module.exports.setupMongoose = setupMongoose;

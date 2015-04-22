@@ -22,15 +22,6 @@ BaseActivity.methods.activityActor = function() {
     return actor;
 };
 
-BaseActivity.methods.activityActorId = function() {
-    var actor = this.activityGetActor();
-    if (typeof(actor.activityInstanceReference) === 'function') {
-        return actor.activityInstanceReference(actor);
-    } else {
-        return actor;
-    }
-};
-
 BaseActivity.methods.activityObject = function() {
     return this;
 };

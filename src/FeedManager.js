@@ -69,11 +69,12 @@ FeedManager.prototype = {
   },
 
   activityCreated: function(instance) {
-    if (this.trackingEnabled(instance)){
+    if (this.trackingEnabled(instance)) {
       var activity = instance.createActivity();
-      instance.getStreamBackend().serializeActivities([activity]);
+      var backend = instance.getStreamBackend();
+      backend.serializeActivities([activity]);
       var feedType = instance.activityActorFeed() || this.settings.userFeed;
-      var userId = instance.activityActorId();
+      var userId = backend.getIdFromRef(activity.actor);
       feed = this.getFeed(feedType, userId);
       feed.addActivity(activity, function(err, response, body) {
         if (err) console.log('err: ', err);
@@ -82,7 +83,7 @@ FeedManager.prototype = {
   },
 
   activityDeleted: function(instance) {
-    if (this.trackingEnabled(instance)){
+    if (this.trackingEnabled(instance)) {
       var activity = instance.createActivity();
       feed = this.getFeed(this.settings.userFeed, activity.actor);
       feed.removeActivity({'foreignId': activity.foreign_id}, function(err, response, body) {
