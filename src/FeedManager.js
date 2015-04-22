@@ -85,7 +85,8 @@ FeedManager.prototype = {
   activityDeleted: function(instance) {
     if (this.trackingEnabled(instance)) {
       var activity = instance.createActivity();
-      feed = this.getFeed(this.settings.userFeed, activity.actor);
+      var userId = backend.getIdFromRef(activity.actor);
+      feed = this.getFeed(feedType, userId);
       feed.removeActivity({'foreignId': activity.foreign_id}, function(err, response, body) {
         if (err) console.log('err: ', err);
       });
