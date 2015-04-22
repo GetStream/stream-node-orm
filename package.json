@@ -11,7 +11,7 @@
   "license": "MIT",
   "main": "./src/index.js",
   "dependencies": {
-    "getstream": "^2.1.7",
+    "getstream-node": "^0.1.0",
     "mongoose": "^3.0.0",
     "async": "^0.9.0"
   },
