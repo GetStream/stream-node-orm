@@ -1,6 +1,6 @@
 {
   "name": "getstream-node",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Build newsfeeds and activity feeds on node.js using getstream.io",
   "author": "Tommaso Barbugli <tbarbugli@gmail.com> (http://getstream.io/)",
   "contributors": [
