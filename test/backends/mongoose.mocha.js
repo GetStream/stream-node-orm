@@ -43,6 +43,8 @@ tweetSchema.methods.activityActorProp = function() {
   return 'actor';
 }
 
+StreamMongoose.setupMongoose(mongoose);
+
 var Tweet = mongoose.model('Tweet', tweetSchema);
 var User = mongoose.model('User', userSchema);
 var Link = mongoose.model('Link', linkSchema);

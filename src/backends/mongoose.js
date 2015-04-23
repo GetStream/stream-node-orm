@@ -33,6 +33,8 @@ Backend.prototype.loadFromStorage = function(modelClass, objectsIds, callback) {
 };
 
 Backend.prototype.getClassFromRef = function(ref) {
+  // TODO: raise error if this.getMongoose returns undefined
+  // it means user forgot to call setupMongoose
   var mongoose = this.getMongoose();
   return mongoose.model(ref);
 }
@@ -57,6 +59,17 @@ function extendSchema(base, mixin) {
   return base;
 }
 
+function getReferencePaths(paths) {
+  var names = [];
+  for (var k in paths) {
+    if (paths[k].instance === 'ObjectID' && k !== '_id') {
+      names.push(paths[k].path);
+    }
+  }
+  return names.join(' ');
+}
+
+
 var activitySchema = function(Schema) {
   // add base proto functions from BaseActivity
   extendSchema(Schema, BaseActivity);
@@ -67,16 +80,26 @@ var activitySchema = function(Schema) {
   });
 
   Schema.post('save', function(doc) {
-    if (doc.wasNew) {
-      stream.FeedManager.activityCreated(doc);
-    }
+    var paths = getReferencePaths(doc.schema.paths);
+    doc.populate(paths, function(err, docP) {
+      if (docP.wasNew) {
+        stream.FeedManager.activityCreated(docP);
+      }
+    });
   });
 
   Schema.post('remove', function(doc) {
-    stream.FeedManager.activityDeleted(doc);
+    var paths = getReferencePaths(doc.schema.paths);
+    doc.populate(paths, function(err, docP) {
+      stream.FeedManager.activityDeleted(docP);
+    });
   });
 
   // add Mongoose specific proto functions
+  Schema.methods.referencesPaths = function() {
+    return this;
+  }
+
   Schema.methods.getStreamBackend = function() {
     return new Backend();
   }

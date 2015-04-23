@@ -86,6 +86,8 @@ FeedManager.prototype = {
     if (this.trackingEnabled(instance)) {
       var activity = instance.createActivity();
       var backend = instance.getStreamBackend();
+      backend.serializeActivities([activity]);
+      var feedType = instance.activityActorFeed() || this.settings.userFeed;
       var userId = backend.getIdFromRef(activity.actor);
       feed = this.getFeed(feedType, userId);
       feed.removeActivity({'foreignId': activity.foreign_id}, function(err, response, body) {
