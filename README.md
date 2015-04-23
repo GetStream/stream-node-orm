@@ -19,12 +19,6 @@ by the environment variable `STREAM_NODE_CONFIG_DIR` if it's set.
 Mongoose integration
 --------------------
 
-Note: Models created with connect.model are not supported by this integration
-
-```js
-connection.model()
-```
-
 Register the models' schemas that you want to store in feeds:
 
 ```js
@@ -38,6 +32,12 @@ var tweetSchema = Schema({
 });
 
 stream.mongoose.activitySchema(tweetSchema);
+```
+
+Make sure you register your mongoose connection or things won't work!
+
+```js
+stream_node.mongoose.setupMongoose(mongoose);
 ```
 
 Store extra information in feeds:
