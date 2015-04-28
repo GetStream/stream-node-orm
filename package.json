@@ -12,9 +12,10 @@
   "license": "MIT",
   "main": "./src/index.js",
   "dependencies": {
-    "mongoose": "^3.0.0",
     "async": "^0.9.0",
-    "getstream": "^2.1.7"
+    "getstream": "^2.1.7",
+    "istanbul": "^0.3.13",
+    "mongoose": "^3.0.0"
   },
   "devDependencies": {
     "mocha": "^1.20.1",
@@ -22,7 +23,7 @@
     "better-assert": "^1.0.0"
   },
   "scripts": {
-    "test": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' NODE_ENV=test bash test/index.sh"
+    "test": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' NODE_ENV=test ./node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha test/backends test"
   },
   "engines": {
     "node": ">=0.6.19"
