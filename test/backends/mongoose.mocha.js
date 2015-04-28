@@ -4,6 +4,8 @@ var StreamMongoose = require('../../src/backends/mongoose.js');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var stream = require('../../src/index.js');
+var sinon = require('sinon');
+var mockery = require('mockery');
 
 mongoose.connect('mongodb://localhost/test');
 
@@ -59,7 +61,17 @@ describe('Backend', function() {
       link = new Link({'href': 'https://getstream.io'});
       link.save();
       this.link = link;
+
+      // replace the module `request` with a stub object
+      mockery.enable({});
+      requestStub = sinon.stub();
+      mockery.registerMock('request', requestStub);
+
       done();
+    });
+
+    after(function(){
+      mockery.disable();
     });
 
     it('serialise null', function(done) {
@@ -184,6 +196,16 @@ describe('Backend', function() {
         });
     });
 
+    it('delete activity', function(done) {
+        var self = this;
+        var tweet = new Tweet();
+        tweet.text = 'test';
+        tweet.actor = this.actor;
+        tweet.save(function(err) {
+          tweet.remove(done);
+        });
+    });
+
     it('enrich one activity', function(done) {
         var self = this;
         var tweet = new Tweet();
@@ -290,11 +312,11 @@ describe('Backend', function() {
         var tweet1 = new Tweet();
         tweet1.text = 'test1';
         actor = new User({'name': 'actor1'});
-        tweet1.actor = actor._id;
+        tweet1.actor = this.actor;
+
         var tweet2 = new Tweet();
         tweet2.text = 'test2';
-        actor2 = new User({'name': 'actor1'});
-        tweet2.actor = actor2._id;
+        tweet2.actor = this.actor;
 
         async.each([tweet1, tweet2], 
           function(obj, cb){

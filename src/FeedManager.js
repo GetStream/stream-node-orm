@@ -15,8 +15,7 @@ FeedManager.prototype = {
       options.location = this.settings.apiLocation;
     }
 
-    // include heroku support
-    if (typeof(process) != "undefined" && process.env.STREAM_URL) {
+    if (typeof(process) !== "undefined" && process.env.STREAM_URL) {
       this.client = stream.connect();
     } else {
       this.client = stream.connect(this.settings.apiKey, this.settings.apiSecret, this.settings.apiAppId, options);

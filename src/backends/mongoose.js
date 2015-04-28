@@ -104,10 +104,6 @@ var activitySchema = function(Schema) {
     return new Backend();
   }
 
-  Schema.methods.activityInstanceReference = function() {
-    return this._id;
-  }
-
   Schema.statics.activityModelReference = function() {
     return this.modelName;
   }
