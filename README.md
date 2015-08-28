@@ -1,6 +1,7 @@
 ##Stream NodeJS
 
 [![Build Status](https://travis-ci.org/tbarbugli/stream-node.svg)](https://travis-ci.org/tbarbugli/stream-node)
+[![npm version](https://badge.fury.io/js/getstream-node.svg)](http://badge.fury.io/js/getstream-node)
 
 This package helps you create activity streams & newsfeeds with NodeJS and [GetStream.io](https://getstream.io).
 
