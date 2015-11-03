@@ -7,24 +7,24 @@ var stream = require('../../src/index.js');
 var sinon = require('sinon');
 var mockery = require('mockery');
 
-mongoose.connect('mongodb://localhost/test');
+var connection = mongoose.connect('mongodb://localhost/test');
 
-var userSchema = Schema({
+var ActivitySchema = StreamMongoose.ActivitySchemaFactory(connection.Schema);
+
+var userSchema = new Schema({
   name    : String
 });
 
-var linkSchema = Schema({
+var linkSchema = new Schema({
   href    : String
 });
 
-var tweetSchema = Schema({
+var tweetSchema = new ActivitySchema({
   text    : String,
   actor   : { type: Schema.Types.ObjectId, ref: 'User' },
   bg      : String,
   link    : { type: Schema.Types.ObjectId, ref: 'Link' }
 });
-
-StreamMongoose.activitySchema(tweetSchema);
 
 tweetSchema.statics.pathsToPopulate = function() {
   return ['actor', 'link'];
@@ -77,30 +77,34 @@ describe('Backend', function() {
     it('serialise null', function(done) {
       var activity = {'object': null};
       backend.serializeActivities([activity]);
-      backend.enrichActivities([activity], function(err, enriched) {
-        should.not.exist(err);
-        enriched.should.length(1);
-        enriched[0].should.have.property('object', null);
-        done();
-      });
+      backend.enrichActivities([activity])
+        .then(function(enriched) {
+          enriched.should.length(1);
+          enriched[0].should.have.property('object', null);
+          done();
+        })
+        .catch(done);
     });
 
     it('enrich missing model', function(done) {
       var activity = {'object': 'user:42'};
-      backend.enrichActivities([activity], function(err, enriched) {
-        (err).should.be.an.instanceOf(Error);
-        done();
-      });
+      backend.enrichActivities([activity])
+        .then(done)
+        .catch(function(err) {
+          (err).should.be.an.instanceOf(Error);
+          done();
+        });
     });
 
     it('dont enrich origin field', function(done) {
       var activity = {'origin': 'user:42'};
-      backend.enrichActivities([activity], function(err, enriched) {
-        should.not.exist(err);
-        enriched.should.length(1);
-        enriched[0].should.have.property('origin', 'user:42');
-        done();
-      });
+      backend.enrichActivities([activity])
+        .then(function(enriched) {
+          enriched.should.length(1);
+          enriched[0].should.have.property('origin', 'user:42');
+          done();
+        })
+        .catch(done);
     });
 
     it('enrich aggregated activity complex mix', function(done) {
@@ -122,23 +126,24 @@ describe('Backend', function() {
               {'actor_count': 1, 'activities': activities},
               {'actor_count': 1, 'activities': activities2},
             ];
-            backend.enrichAggregatedActivities(aggregatedActivities, function(err, enriched) {
-              should.not.exist(err);
-              enriched.should.length(2);
-              var firstAggregation = enriched[0];
-              var secondAggregation = enriched[1];
-              firstAggregation.should.have.property('activities').with.lengthOf(1);
-              firstAggregation['activities'][0].should.have.property('actor');
-              firstAggregation['activities'][0].should.have.property('object');
-              firstAggregation['activities'][0].object.should.have.property('_id');
-              firstAggregation['activities'][0].should.have.property('verb');
-              secondAggregation['activities'][0].should.have.property('actor');
-              secondAggregation['activities'][0].should.have.property('object');
-              secondAggregation['activities'][0].object.should.have.property('_id');
-              secondAggregation['activities'][0].should.have.property('verb');
-              (firstAggregation['activities'][0].object._id).should.not.equal((secondAggregation['activities'][0].object._id));
-              done();
-            });
+            backend.enrichAggregatedActivities(aggregatedActivities)
+              .then(function(enriched) {
+                enriched.should.length(2);
+                var firstAggregation = enriched[0];
+                var secondAggregation = enriched[1];
+                firstAggregation.should.have.property('activities').with.lengthOf(1);
+                firstAggregation['activities'][0].should.have.property('actor');
+                firstAggregation['activities'][0].should.have.property('object');
+                firstAggregation['activities'][0].object.should.have.property('_id');
+                firstAggregation['activities'][0].should.have.property('verb');
+                secondAggregation['activities'][0].should.have.property('actor');
+                secondAggregation['activities'][0].should.have.property('object');
+                secondAggregation['activities'][0].object.should.have.property('_id');
+                secondAggregation['activities'][0].should.have.property('verb');
+                (firstAggregation['activities'][0].object._id).should.not.equal((secondAggregation['activities'][0].object._id));
+                done();
+              })
+              .catch(done);
         });
     });
 
@@ -154,15 +159,16 @@ describe('Backend', function() {
             var aggregatedActivities = [
               {'actor_count': 1, 'activities': [activity]},
             ];
-            backend.enrichAggregatedActivities(aggregatedActivities, function(err, enriched) {
-              should.not.exist(err);
-              enriched.should.length(1);
-              enriched[0].should.have.property('activities').with.lengthOf(1);
-              enriched[0]['activities'][0].should.have.property('actor');
-              enriched[0]['activities'][0].should.have.property('object');
-              enriched[0]['activities'][0].should.have.property('verb');
-              done();
-            });
+            backend.enrichAggregatedActivities(aggregatedActivities)
+              .then(function(enriched) {
+                enriched.should.length(1);
+                enriched[0].should.have.property('activities').with.lengthOf(1);
+                enriched[0]['activities'][0].should.have.property('actor');
+                enriched[0]['activities'][0].should.have.property('object');
+                enriched[0]['activities'][0].should.have.property('verb');
+                done();
+              })
+              .catch(done);
         });
     });
 
@@ -179,20 +185,21 @@ describe('Backend', function() {
               {'actor_count': 1, 'activities': [activity]},
               {'actor_count': 1, 'activities': [activity, activity]},
             ];
-            backend.enrichAggregatedActivities(aggregatedActivities, function(err, enriched) {
-              should.not.exist(err);
-              enriched.should.length(2);
-              enriched[0].should.have.property('activities').with.lengthOf(1);
-              enriched[0]['activities'][0].should.have.property('actor');
-              enriched[0]['activities'][0].should.have.property('object');
-              enriched[0]['activities'][0].should.have.property('verb');
+            backend.enrichAggregatedActivities(aggregatedActivities)
+              .then(function(enriched) {
+                enriched.should.length(2);
+                enriched[0].should.have.property('activities').with.lengthOf(1);
+                enriched[0]['activities'][0].should.have.property('actor');
+                enriched[0]['activities'][0].should.have.property('object');
+                enriched[0]['activities'][0].should.have.property('verb');
 
-              enriched[1].should.have.property('activities').with.lengthOf(2);
-              enriched[1]['activities'][0].should.have.property('actor');
-              enriched[1]['activities'][0].should.have.property('object');
-              enriched[1]['activities'][0].should.have.property('verb');
-              done();
-            });
+                enriched[1].should.have.property('activities').with.lengthOf(2);
+                enriched[1]['activities'][0].should.have.property('actor');
+                enriched[1]['activities'][0].should.have.property('object');
+                enriched[1]['activities'][0].should.have.property('verb');
+                done();
+              })
+              .catch(done);
         });
     });
 
@@ -216,14 +223,15 @@ describe('Backend', function() {
             var activity = tweet.createActivity();
             backend.serializeActivities([activity]);
             activity = JSON.parse(JSON.stringify(activity));
-            backend.enrichActivities([activity], function(err, enriched) {
-              should.not.exist(err);
-              enriched.should.length(1);
-              enriched[0].should.have.property('actor');
-              enriched[0]['actor'].should.have.property('_id', self.actor._id);
-              enriched[0].should.have.property('foreign_id', 'Tweet:'+tweet._id);
-              done();
-            });
+            backend.enrichActivities([activity])
+              .then(function(enriched) {
+                enriched.should.length(1);
+                enriched[0].should.have.property('actor');
+                enriched[0]['actor'].should.have.property('_id', self.actor._id);
+                enriched[0].should.have.property('foreign_id', 'Tweet:'+tweet._id);
+                done();
+              })
+              .catch(done);
         });
     });
 
@@ -237,19 +245,20 @@ describe('Backend', function() {
         tweet.save(function(err) {
             should.not.exist(err);
             var activity = tweet.createActivity();
-            backend.enrichActivities([activity], function(err, enriched) {
-              should.not.exist(err);
-              enriched.should.length(1);
-              enriched[0].should.have.property('actor');
-              enriched[0]['actor'].should.have.property('_id', self.actor._id);
-              enriched[0].should.have.property('object');
-              enriched[0]['object'].should.have.property('_id', tweet._id);
-              enriched[0]['object'].should.have.property('text', tweet.text);
-              enriched[0].should.have.property('bg', 'bgvalue');
-              enriched[0].should.have.property('link');
-              enriched[0]['link'].should.have.property('_id', this.link._id);
-              done();
-            });
+            backend.enrichActivities([activity])
+              .then(function(enriched) {
+                enriched.should.length(1);
+                enriched[0].should.have.property('actor');
+                enriched[0]['actor'].should.have.property('_id', self.actor._id);
+                enriched[0].should.have.property('object');
+                enriched[0]['object'].should.have.property('_id', tweet._id);
+                enriched[0]['object'].should.have.property('text', tweet.text);
+                enriched[0].should.have.property('bg', 'bgvalue');
+                enriched[0].should.have.property('link');
+                enriched[0]['link'].should.have.property('_id', this.link._id);
+                done();
+              })
+              .catch(done);
         });
     });
 
@@ -295,16 +304,17 @@ describe('Backend', function() {
         tweet.save(function(err) {
             should.not.exist(err);
             var activity = tweet.createActivity();
-            backend.enrichActivities([activity], function(err, enriched){
-              should.not.exist(err);
-              enriched.should.length(1);
-              enriched[0].should.have.property('actor');
-              enriched[0]['actor'].should.have.property('_id', self.actor._id);
-              enriched[0].should.have.property('object');
-              enriched[0]['object'].should.have.property('_id', tweet._id);
-              enriched[0]['object'].should.have.property('text', tweet.text);
-              done();
-            });
+            backend.enrichActivities([activity])
+              .then(function(enriched){
+                enriched.should.length(1);
+                enriched[0].should.have.property('actor');
+                enriched[0]['actor'].should.have.property('_id', self.actor._id);
+                enriched[0].should.have.property('object');
+                enriched[0]['object'].should.have.property('_id', tweet._id);
+                enriched[0]['object'].should.have.property('text', tweet.text);
+                done();
+              })
+              .catch(done);
         });
     });
 
@@ -324,17 +334,18 @@ describe('Backend', function() {
           },
           function(){
             var activities = [tweet1.createActivity(), tweet2.createActivity()];
-            backend.enrichActivities(activities,
-              function(err, enriched){
+            backend.enrichActivities(activities)
+              .then(function(enriched){
                 enriched.should.length(2);
                 enriched[0].should.have.property('foreign_id');
                 enriched[1].should.have.property('foreign_id');
                 enriched[0]['foreign_id'].should.not.equal(enriched[1]['foreign_id']);
                 done();
-              }
-            )}
-          );
-      });
+              })
+              .catch(done);
+          }
+        );
+    });
 });
 
 describe('Tweet', function() {

@@ -1,4 +1,4 @@
-var BaseActivity = require('./activity.js');
+var baseActivitySchemaPlugin = require('./activity.js');
 var util = require("util");
 var stream = require('../index.js');
 
@@ -43,22 +43,6 @@ Backend.prototype.getIdFromRef = function(ref) {
   return ref.split(':')[1];
 }
 
-function extendSchema(base, mixin) {
-  if (typeof base.methods === 'undefined') {
-    base.methods = {};
-  }
-  if (typeof base.statics === 'undefined') {
-    base.statics = {};
-  }
-  for (var fn in mixin.methods) {
-    base.methods[fn] = mixin.methods[fn];
-  }
-  for (var fn in mixin.statics) {
-    base.statics[fn] = mixin.statics[fn];
-  }
-  return base;
-}
-
 function getReferencePaths(paths) {
   var names = [];
   for (var k in paths) {
@@ -69,17 +53,13 @@ function getReferencePaths(paths) {
   return names.join(' ');
 }
 
-
-var activitySchema = function(Schema) {
-  // add base proto functions from BaseActivity
-  extendSchema(Schema, BaseActivity);
-
-  Schema.pre('save', function(next) {
+var activitySchemaPlugin = function(schema, options) {
+  schema.pre('save', function(next) {
     this.wasNew = this.isNew;
     next();
   });
 
-  Schema.post('save', function(doc) {
+  schema.post('save', function(doc) {
     var paths = getReferencePaths(doc.schema.paths);
     doc.populate(paths, function(err, docP) {
       if (docP.wasNew) {
@@ -88,7 +68,7 @@ var activitySchema = function(Schema) {
     });
   });
 
-  Schema.post('remove', function(doc) {
+  schema.post('remove', function(doc) {
     var paths = getReferencePaths(doc.schema.paths);
     doc.populate(paths, function(err, docP) {
       stream.FeedManager.activityDeleted(docP);
@@ -96,27 +76,42 @@ var activitySchema = function(Schema) {
   });
 
   // add Mongoose specific proto functions
-  Schema.methods.referencesPaths = function() {
+  schema.methods.referencesPaths = function() {
     return this;
-  }
+  };
 
-  Schema.methods.getStreamBackend = function() {
+  schema.methods.getStreamBackend = function() {
     return new Backend();
-  }
+  };
 
-  Schema.statics.activityModelReference = function() {
+  schema.statics.activityModelReference = function() {
     return this.modelName;
-  }
+  };
 
-  Schema.methods.activityVerb = function() {
+  schema.methods.activityVerb = function() {
     return this.constructor.modelName;
   };
 
-  Schema.statics.pathsToPopulate = function() {
+  schema.statics.pathsToPopulate = function() {
     return [];
   };
 };
 
-module.exports.activitySchema = activitySchema;
+module.exports.ActivitySchemaFactory = function(Schema) {
+  var ActivitySchema = function () {
+    if(! (this instanceof Schema)) {
+      throw new Error('ActivitySchema should be instantiated using the new operator.');
+    }
+
+    Schema.apply(this, arguments);
+
+    this.plugin(baseActivitySchemaPlugin);
+    this.plugin(activitySchemaPlugin);
+  }
+
+  util.inherits(ActivitySchema, Schema);
+
+  return ActivitySchema;
+};
 module.exports.Backend = Backend;
 module.exports.setupMongoose = setupMongoose;
