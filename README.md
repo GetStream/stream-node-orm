@@ -157,21 +157,24 @@ When you read data from feeds, a like activity will look like this:
 
 This is far from ready for usage in your template. We call the process of loading the references from the database enrichment. An example is shown below:
 
-```js
+```
 router.get('/flat', ensureAuthenticated, function(req, res, next){
     var flatFeed = FeedManager.getNewsFeeds(req.user.id)['flat'];
-
-    flatFeed.get({}, function(err, response, body){
-        if (err) return next(err);
-        var activities = body.results;
-        StreamBackend.enrichActivities(activities,
-          function(err, enrichedActivities){
+    
+    flatFeed.get({})
+    	.then(function (body) {
+        	var activities = body.results;
+        	return StreamBackend.enrichActivities(activities);
+        })
+        .then(function (enrichedActivities) {
             return res.render('feed', {location: 'feed', user: req.user, activities: enrichedActivities, path: req.url});
-          }
-        );     
+        })
+        .catch(next)   
     });
 });
 ```
+
+Promises are used to pipe the asynchronous result of `flatFeed.get` and `StreamBackend.enrichActivities` through our code.
 
 ###Temporarily disabling the model sync
 
