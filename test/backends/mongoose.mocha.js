@@ -9,8 +9,6 @@ var mockery = require('mockery');
 
 var connection = mongoose.connect('mongodb://localhost/test');
 
-var ActivitySchema = StreamMongoose.ActivitySchemaFactory(connection.Schema);
-
 var userSchema = new Schema({
   name    : String
 });
@@ -19,12 +17,14 @@ var linkSchema = new Schema({
   href    : String
 });
 
-var tweetSchema = new ActivitySchema({
+var tweetSchema = new Schema({
   text    : String,
   actor   : { type: Schema.Types.ObjectId, ref: 'User' },
   bg      : String,
   link    : { type: Schema.Types.ObjectId, ref: 'Link' }
 });
+
+tweetSchema.plugin(StreamMongoose.activity);
 
 tweetSchema.statics.pathsToPopulate = function() {
   return ['actor', 'link'];

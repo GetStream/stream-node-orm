@@ -53,7 +53,7 @@ function getReferencePaths(paths) {
   return names.join(' ');
 }
 
-var activitySchemaPlugin = function(schema, options) {
+var mongooseActivitySchemaPlugin = function(schema, options) {
   schema.pre('save', function(next) {
     this.wasNew = this.isNew;
     next();
@@ -97,21 +97,10 @@ var activitySchemaPlugin = function(schema, options) {
   };
 };
 
-module.exports.ActivitySchemaFactory = function(Schema) {
-  var ActivitySchema = function () {
-    if(! (this instanceof Schema)) {
-      throw new Error('ActivitySchema should be instantiated using the new operator.');
-    }
-
-    Schema.apply(this, arguments);
-
-    this.plugin(baseActivitySchemaPlugin);
-    this.plugin(activitySchemaPlugin);
-  }
-
-  util.inherits(ActivitySchema, Schema);
-
-  return ActivitySchema;
+module.exports.activity = function(schema, options) {
+  schema.plugin(baseActivitySchemaPlugin);
+  schema.plugin(mongooseActivitySchemaPlugin);
 };
+
 module.exports.Backend = Backend;
 module.exports.setupMongoose = setupMongoose;

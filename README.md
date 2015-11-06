@@ -49,7 +49,7 @@ var tweetSchema = Schema({
   user   : { type: Schema.Types.ObjectId, ref: 'User' }
 });
 
-stream.mongoose.activitySchema(tweetSchema);
+tweetSchema.plugin(stream.mongoose.activity);
 
 // register your mongoose connection with the library
 stream_node.mongoose.setupMongoose(mongoose);
