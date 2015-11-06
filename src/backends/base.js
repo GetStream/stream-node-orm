@@ -1,4 +1,5 @@
 var async = require("async");
+var Promise = require("promise");
 
 var BaseBackend = function() {
 }
@@ -67,12 +68,9 @@ BaseBackend.prototype = {
       }
     );
   },
-  enrichActivities: function(activities, callback) {
-    try {
-      this._enrichActivities(activities, callback);
-    } catch (err) {
-      callback(err, activities);
-    }
+  enrichActivities: function(activities) {
+    // Return a Promise instead of using node style callbacks (_enrichActivities accepts one argument + callback)
+    return Promise.denodeify(this._enrichActivities, 1).call(this, activities);
   },
   _enrichActivities: function(activities, callback) {
     var self = this;
@@ -86,12 +84,9 @@ BaseBackend.prototype = {
       callback(err, activities);
     });
   },
-  enrichAggregatedActivities: function(aggregatedActivities, callback) {
-    try {
-      this._enrichAggregatedActivities(aggregatedActivities, callback);
-    } catch (err) {
-      callback(err, aggregatedActivities);
-    }
+  enrichAggregatedActivities: function(aggregatedActivities) {
+    // Return a Promise instead of using node style callbacks (_enrichAggregatedActivities accepts one argument + callback)
+    return Promise.denodeify(this._enrichAggregatedActivities, 1).call(this, aggregatedActivities);
   },
   _enrichAggregatedActivities: function(aggregatedActivities, callback) {
     var references = {};
@@ -99,13 +94,12 @@ BaseBackend.prototype = {
     var self = this;
     for (var i in aggregatedActivities) {
       enrichments.push(
-        function(aggregated){
+        (function(aggregated){
           return function(done) {
-            self.enrichActivities(aggregated['activities'], function(err, results) {
-              done(err, aggregated);
-            });
+            self.enrichActivities(aggregated['activities'])
+              .then(done.bind(this, null), done);
           }
-        }(aggregatedActivities[i]))
+        })(aggregatedActivities[i]))
     }
     async.parallel(enrichments, function(err) { callback(err, aggregatedActivities); });
   },

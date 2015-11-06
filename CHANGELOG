@@ -1,0 +1,12 @@
+================
+ Change history
+================
+
+0.2.0
+=====
+:release-date:
+:by: Matthisk Heimensen
+
+* Breaking change: enrichActivities and enrichAggregatedActivities no longer accept a callback but return a promise
+* Breaking change: No longer register a schema to be an ActivitySchema through activitySchema method but build an ActivitySchema object from ActivitySchemaFactory
+
