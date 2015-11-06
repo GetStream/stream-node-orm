@@ -16,6 +16,8 @@ function _loadFile(path) {
 }
 
 var Config = function () {
+  var settings = {},
+      config_file = '';
   // load config from defaults or config file
 
   if (typeof(process) != "undefined" && process.env.STREAM_NODE_CONFIG_DIR) {
