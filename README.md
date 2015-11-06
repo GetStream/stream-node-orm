@@ -76,7 +76,7 @@ var tweetSchema = Schema({
   user   : { type: Schema.Types.ObjectId, ref: 'User' }
 });
 
-stream.mongoose.activitySchema(tweetSchema);
+tweetSchema.plugin(stream.mongoose.activity);
 
 tweetSchema.methods.activityActorProp = function() {
   return 'actor';
