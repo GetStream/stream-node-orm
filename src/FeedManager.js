@@ -75,7 +75,6 @@ FeedManager.prototype = {
       var feedType = instance.activityActorFeed() || this.settings.userFeed;
       var userId = backend.getIdFromRef(activity.actor);
       feed = this.getFeed(feedType, userId);
-      console.log('ADDING ACTIVITY', activity);
       feed.addActivity(activity, function(err, response, body) {
         if (err) console.log('err: ', err);
       });

@@ -4,9 +4,9 @@
 
 0.2.0
 =====
-:release-date:
+:release-date: 24-11-2015
 :by: Matthisk Heimensen
 
 * Breaking change: enrichActivities and enrichAggregatedActivities no longer accept a callback but return a promise
 * Breaking change: No longer register a schema to be an ActivitySchema through activitySchema method but build an ActivitySchema object from ActivitySchemaFactory
-
+- Creating a FeedManager can now also be done with custom settings (not loaded via getstream.json) through the method feedManagerFactory
