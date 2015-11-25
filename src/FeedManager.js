@@ -20,7 +20,7 @@ FeedManager.prototype = {
     } else {
       this.client = stream.connect(this.settings.apiKey, this.settings.apiSecret, this.settings.apiAppId, options);
     }
-
+    
   },
 
   trackingEnabled: function(instance) {
