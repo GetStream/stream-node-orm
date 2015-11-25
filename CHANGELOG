@@ -2,9 +2,9 @@
  Change history
 ================
 
-0.2.0
+1.0.0
 =====
-:release-date: 24-11-2015
+:release-date: 25-11-2015
 :by: Matthisk Heimensen
 
 * Breaking change: enrichActivities and enrichAggregatedActivities no longer accept a callback but return a promise
