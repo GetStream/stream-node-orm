@@ -151,13 +151,13 @@ FeedManager.followUser(userId, targetId);
 
 When you read data from feeds, a like activity will look like this:
 
-```
+```js
 {'actor': 'User:1', 'verb': 'like', 'object': 'Like:42'}
 ```
 
 This is far from ready for usage in your template. We call the process of loading the references from the database enrichment. An example is shown below:
 
-```
+```js
 router.get('/flat', ensureAuthenticated, function(req, res, next){
     var flatFeed = FeedManager.getNewsFeeds(req.user.id)['flat'];
     
