@@ -54,7 +54,7 @@ BaseBackend.prototype = {
       function(modelRef, done){
         var refs = references[modelRef];
         var modelClass = self.getClassFromRef(modelRef);
-        if (typeof(modelClass) === 'undefined') return done();
+        if (!modelClass || typeof(modelClass) === 'undefined') return done();
         if (typeof(objects[modelRef]) === 'undefined') objects[modelRef] = {};
         self.loadFromStorage(modelClass, refs, function(err, objectsIds) {
           for(var k in objectsIds){

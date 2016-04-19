@@ -86,14 +86,15 @@ describe('Backend', function() {
         .catch(done);
     });
 
-    it('enrich missing model', function(done) {
-      var activity = {'object': 'user:42'};
-      backend.enrichActivities([activity])
-        .then(done)
-        .catch(function(err) {
-          (err).should.be.an.instanceOf(Error);
-          done();
-        });
+    it('skips missing model', function(done) {
+        var activity = {'object': 'user:42'};
+        backend.enrichActivities([activity])
+            .then(function( enriched ) {
+                enriched.should.length(1);
+                enriched[0].should.have.property('object', 'user:42');
+                done();
+            })
+            .catch(done);
     });
 
     it('dont enrich origin field', function(done) {
