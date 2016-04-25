@@ -33,15 +33,21 @@ Backend.prototype.loadFromStorage = function(modelClass, objectsIds, callback) {
 };
 
 Backend.prototype.getClassFromRef = function(ref) {
-  // TODO: raise error if this.getMongoose returns undefined
-  // it means user forgot to call setupMongoose
+  
   var mongoose = this.getMongoose();
-  return mongoose.model(ref);
-}
+
+  try {
+    var model = mongoose.model(ref);
+    return model;
+  } catch( err ) {
+    return null;
+  }
+
+};
 
 Backend.prototype.getIdFromRef = function(ref) {
   return ref.split(':')[1];
-}
+};
 
 function getReferencePaths(paths) {
   var names = [];
