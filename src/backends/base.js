@@ -110,6 +110,9 @@ BaseBackend.prototype = {
       args.activity[args.field] = self.serializeValue(value);
     });
   },
+  serializeActivity: function(activity) {
+      this.serializeActivities([activity]);
+  },
   // Backend specific functions
   loadFromStorage: function(objectsIds, callback) {},
   serializeValue: function(value) {
