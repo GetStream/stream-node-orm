@@ -1,6 +1,6 @@
 var async = require("async");
 var should = require('should');
-var StreamMongoose = require('../../src/backends/mongoose.js'); 
+var StreamMongoose = require('../../src/backends/mongoose.js');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var stream = require('../../src/index.js');
@@ -84,16 +84,6 @@ describe('Backend', function() {
           done();
         })
         .catch(done);
-    });
-
-    it('enrich missing model', function(done) {
-      var activity = {'object': 'user:42'};
-      backend.enrichActivities([activity])
-        .then(done)
-        .catch(function(err) {
-          (err).should.be.an.instanceOf(Error);
-          done();
-        });
     });
 
     it('dont enrich origin field', function(done) {
@@ -328,7 +318,7 @@ describe('Backend', function() {
         tweet2.text = 'test2';
         tweet2.actor = this.actor;
 
-        async.each([tweet1, tweet2], 
+        async.each([tweet1, tweet2],
           function(obj, cb){
             obj.save(function(err) { cb()})
           },
