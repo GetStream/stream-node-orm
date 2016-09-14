@@ -1,6 +1,7 @@
 var baseActivitySchemaPlugin = require('./activity.js');
 var util = require("util");
 var stream = require('../index.js');
+var mongoose = require('mongoose');
 
 function Backend() {}
 
@@ -17,6 +18,24 @@ Backend.prototype.serializeValue = function(value) {
     return value;
   }
 }
+
+Backend.prototype.collectReferences = function(activities) {
+  var modelReferences = {};
+  this.iterActivityFieldsWithReferences(activities, function(args) {
+    try {
+        new mongoose.Types.ObjectId(args.instanceRef);
+    } catch (e) {
+        // skip invalid ids
+        return
+    }
+    if (modelReferences[args.modelRef]){
+      modelReferences[args.modelRef].push(args.instanceRef);
+    } else {
+      modelReferences[args.modelRef] = [args.instanceRef];
+    }
+  });
+  return modelReferences;
+},
 
 Backend.prototype.loadFromStorage = function(modelClass, objectsIds, callback) {
   var found = {};
@@ -36,7 +55,13 @@ Backend.prototype.getClassFromRef = function(ref) {
   // TODO: raise error if this.getMongoose returns undefined
   // it means user forgot to call setupMongoose
   var mongoose = this.getMongoose();
-  return mongoose.model(ref);
+  var mongooseModel;
+  try {
+      var mongooseModel = mongoose.model(ref);
+  } catch (e) {
+      // fail silently
+  }
+  return mongooseModel;
 }
 
 Backend.prototype.getIdFromRef = function(ref) {
