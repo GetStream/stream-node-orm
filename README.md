@@ -25,15 +25,20 @@ You can check out our example app built using this library on Github [https://gi
 
 ###Installation
 
+#### Step 1 - NPM
+
 Install getstream_node package with npm:
 
 ```npm install getstream-node```
 
-Copy `getstream.js` config file from `node_modules/getstream-node` into the root directory of your application  
+#### Step 2 - Login with Github
 
 Login with Github on getstream.io and edit the configuration values for
 ```apiKey```, ```apiSecret``` and ```apiAppId``` in your `getstream.js` file (you can find them in the dashboard).
 
+#### Step 3 - Config file
+
+Copy `getstream.js` config file from `node_modules/getstream-node` into the root directory of your application  
 Make sure you require the getstream-node early on in your application (eg. in app.js)
 
 
