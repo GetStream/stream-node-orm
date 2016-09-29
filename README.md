@@ -108,8 +108,8 @@ The news feeds store the activities from the people you follow.
 There is both a flat newsfeed (similar to twitter) and an aggregated newsfeed (like facebook).
 
 ```js
-var flatFeed = FeedManager.getNewsFeeds(foundUser._id)['flat'];
-var aggregatedFeed = FeedManager.getNewsFeeds(req.user.id)['aggregated'];
+var flatFeed = FeedManager.getNewsFeeds(foundUser._id)['timeline_flat'];
+var aggregatedFeed = FeedManager.getNewsFeeds(req.user.id)['timeline_aggregated'];
 ```
 
 #####Notification feed:
@@ -164,7 +164,7 @@ This is far from ready for usage in your template. We call the process of loadin
 
 ```js
 router.get('/flat', ensureAuthenticated, function(req, res, next){
-    var flatFeed = FeedManager.getNewsFeeds(req.user.id)['flat'];
+    var flatFeed = FeedManager.getNewsFeeds(req.user.id)['timeline_flat'];
 
     flatFeed.get({})
     	.then(function (body) {
