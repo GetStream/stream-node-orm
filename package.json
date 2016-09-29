@@ -18,7 +18,7 @@
   "dependencies": {
     "async": ">=0.9.0",
     "extend": ">=3.0.0",
-    "getstream": ">=3.4.1",
+    "getstream": ">=3.5.0",
     "istanbul": ">=0.3.13",
     "mockery": ">=1.4.0",
     "promise": ">=7.0.4",
