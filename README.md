@@ -13,15 +13,22 @@ This package helps you create activity streams & newsfeeds with NodeJS and [GetS
 
 You can build:
 
-* Activity streams such as seen on Github
-* A twitter style newsfeed
-* A feed like instagram/ pinterest
+* Activity streams such as those seen on Github
+* A Twitter style newsfeed
+* A feed like Instagram or Pinterest
 * Facebook style newsfeeds
 * A notification system
 
+### Supported ORMs
+
+Stream node currently supports:
+
+* Mongoose (full support, both serialization and enrichment)
+* Waterline (partial support, enrichment only)
+
 ### Demo
 
-You can check out our example app built using this library on Github [https://github.com/GetStream/Stream-Example-Nodejs](https://github.com/GetStream/Stream-Example-Nodejs)
+You can check out our example app on Github [https://github.com/GetStream/Stream-Example-Nodejs](https://github.com/GetStream/Stream-Example-Nodejs)
 
 ###Installation
 
@@ -29,18 +36,17 @@ You can check out our example app built using this library on Github [https://gi
 
 Install getstream_node package with npm:
 
-```npm install getstream-node```
+```npm install getstream-node --save```
 
-#### Step 2 - Login with Github
-
-Login with Github on getstream.io and edit the configuration values for
-```apiKey```, ```apiSecret``` and ```apiAppId``` in your `getstream.js` file (you can find them in the dashboard).
-
-#### Step 3 - Config file
+#### Step 2 - Config file
 
 Copy `getstream.js` config file from `node_modules/getstream-node` into the root directory of your application  
 Make sure you require the getstream-node early on in your application (eg. in app.js)
 
+#### Step 3 - Get your API key
+
+Login with Github on [getstream.io](https://getstream.io/) and edit the configuration values for
+```apiKey```, ```apiSecret``` and ```apiAppId``` in your `getstream.js` file (you can find them in the [dashboard](https://getstream.io/dashboard/)).
 
 ###Model integration
 
@@ -86,6 +92,31 @@ tweetSchema.plugin(stream.mongoose.activity);
 tweetSchema.methods.activityActorProp = function() {
   return 'author';
 }
+```
+
+#### Customizing the activity
+
+Sometimes you'll want full control over the activity that's send to getstream.io.
+To do that you can overwrite the default createActivity method on the model
+
+```js
+tweetSchema.methods.createActivity = function() {
+	// this is the default createActivity code, customize as you see fit.
+      var activity = {};
+      var extra_data = this.activityExtraData();
+      for (var key in extra_data) {
+          activity[key] = extra_data[key];
+      }
+      activity.to = (this.activityNotify() || []).map(function(x){return x.id});
+      activity.actor = this.activityActor();
+      activity.verb = this.activityVerb();
+      activity.object = this.activityObject();
+      activity.foreign_id = this.activityForeignId();
+      if (this.activityTime()) {
+          activity.time = this.activityTime();
+      }
+      return activity;
+  }
 ```
 
 ###Feed manager
@@ -199,6 +230,35 @@ tweetSchema.statics.pathsToPopulate = function() {
 };
 ```
 
-###Low level APIs access
-When needed you can also use the low level JS API directly.
-The full explanation can be found in the [getstream.io documentation](https://getstream.io/docs/).
+
+
+### Low level APIs access
+
+You can also use the low level JS API directly.
+
+```js
+var streamNode = require('getstream-node');
+var client = streamNode.FeedManager.client
+// client.addActivity, client.removeActivity etc are all available
+```
+
+The full documentation for the low level API is available in the [getstream.io documentation](https://getstream.io/docs/).
+
+### Enrichment
+
+You can use the enrichment capabilities of this library directly.
+
+```js
+var streamNode = require('getstream-node');
+var streamMongoose = new streamNode.MongooseBackend()
+// or
+var streamWaterline = new streamNode.WaterlineBackend()
+// now enrich the activities
+streamWaterline.enrichActivities(activities).then(function(enrichedActivities) {
+	res.json({'results': enrichedActivities})
+}).catch(function(err) {
+	sails.log.error('enrichment failed', err)
+	return res.serverError('failed to load articles in the feed')
+})
+```
+
