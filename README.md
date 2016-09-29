@@ -19,6 +19,13 @@ You can build:
 * Facebook style newsfeeds
 * A notification system
 
+### Supported ORMs
+
+Stream node currently supports:
+
+* Mongoose (full support, both serialization and enrichment)
+* Waterline (partial support, enrichment only)
+
 ### Demo
 
 You can check out our example app built using this library on Github [https://github.com/GetStream/Stream-Example-Nodejs](https://github.com/GetStream/Stream-Example-Nodejs)
