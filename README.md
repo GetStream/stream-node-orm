@@ -206,6 +206,31 @@ tweetSchema.statics.pathsToPopulate = function() {
 };
 ```
 
+### Customizing the activity
+
+Sometimes you'll want full control over the activity that's send to getstream.io.
+To do that you can overwrite the default createActivity method on the model instances
+
+```js
+createActivity = function() {
+	// this is the default createActivity code, customize as you see fit.
+      var activity = {};
+      var extra_data = this.activityExtraData();
+      for (var key in extra_data) {
+          activity[key] = extra_data[key];
+      }
+      activity.to = (this.activityNotify() || []).map(function(x){return x.id});
+      activity.actor = this.activityActor();
+      activity.verb = this.activityVerb();
+      activity.object = this.activityObject();
+      activity.foreign_id = this.activityForeignId();
+      if (this.activityTime()) {
+          activity.time = this.activityTime();
+      }
+      return activity;
+  }
+```
+
 ### Low level APIs access
 
 You can also use the low level JS API directly.
