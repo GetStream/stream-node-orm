@@ -199,6 +199,33 @@ tweetSchema.statics.pathsToPopulate = function() {
 };
 ```
 
-###Low level APIs access
-When needed you can also use the low level JS API directly.
-The full explanation can be found in the [getstream.io documentation](https://getstream.io/docs/).
+### Low level APIs access
+
+You can also use the low level JS API directly.
+
+```js
+var streamNode = require('getstream-node');
+var client = streamNode.FeedManager.client
+// client.addActivity, client.removeActivity etc are all available
+```
+
+The full documentation for the low level API is available in the [getstream.io documentation](https://getstream.io/docs/).
+
+### Enrichment
+
+You can use the enrichment capabilities of this library directly.
+
+```js
+var streamNode = require('getstream-node');
+var streamMongoose = new streamNode.MongooseBackend()
+// or
+var streamWaterline = new streamNode.WaterlineBackend()
+// now enrich the activities
+streamWaterline.enrichActivities(activities).then(function(enrichedActivities) {
+	res.json({'results': enrichedActivities})
+}).catch(function(err) {
+	sails.log.error('enrichment failed', err)
+	return res.serverError('failed to load articles in the feed')
+})
+```
+
