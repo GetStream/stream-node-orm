@@ -22,12 +22,7 @@ Backend.prototype.serializeValue = function(value) {
 Backend.prototype.collectReferences = function(activities) {
   var modelReferences = {};
   this.iterActivityFieldsWithReferences(activities, function(args) {
-    try {
-        new mongoose.Types.ObjectId(args.instanceRef);
-    } catch (e) {
-        // skip invalid ids
-        return
-    }
+
     if (modelReferences[args.modelRef]){
       modelReferences[args.modelRef].push(args.instanceRef);
     } else {
@@ -43,7 +38,21 @@ Backend.prototype.loadFromStorage = function(modelClass, objectsIds, callback) {
   if (typeof(modelClass.pathsToPopulate) === 'function') {
     var paths = modelClass.pathsToPopulate();
   }
-  modelClass.find({_id: {$in: objectsIds}}).populate(paths).exec(function(err, docs){
+
+  // filter out invalid object ids
+  var validObjectIds = [];
+  objectsIds.forEach(function(objectId) {
+      try {
+          new mongoose.Types.ObjectId(objectId);
+          validObjectIds.push(objectId)
+      } catch (e) {
+          // skip invalid ids
+          return
+      }
+  });
+
+
+  modelClass.find({_id: {$in: validObjectIds}}).populate(paths).exec(function(err, docs){
     for (var i in docs){
       found[docs[i]._id] = docs[i];
     }

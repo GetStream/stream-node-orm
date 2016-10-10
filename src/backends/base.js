@@ -3,7 +3,9 @@ var Promise = require("promise");
 
 var BaseBackend = function() {
 }
-
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 BaseBackend.prototype = {
   isReference: function(field, value) {
     if (field === 'origin' || field === 'foreign_id') {
@@ -56,7 +58,7 @@ BaseBackend.prototype = {
         var modelClass = self.getClassFromRef(modelRef);
         if (typeof(modelClass) === 'undefined') return done();
         if (typeof(objects[modelRef]) === 'undefined') objects[modelRef] = {};
-        self.loadFromStorage(modelClass, refs, function(err, objectsIds) {
+        self.loadFromStorageOrCustom(modelRef, modelClass, refs, function(err, objectsIds) {
           for(var k in objectsIds){
             objects[modelRef][k] = objectsIds[k];
           }
@@ -113,8 +115,17 @@ BaseBackend.prototype = {
   serializeActivity: function(activity) {
       this.serializeActivities([activity]);
   },
+  loadFromStorageOrCustom: function(modelRef, modelClass, refs, callback) {
+      var ref = capitalizeFirstLetter(modelRef.toLowerCase());
+      var customLoader = 'load' + ref + 'FromStorage';
+      if (this[customLoader]) {
+          return this[customLoader](modelClass, refs, callback);
+      } else {
+          return this.loadFromStorage(modelClass, refs, callback);
+      }
+  },
   // Backend specific functions
-  loadFromStorage: function(objectsIds, callback) {},
+  loadFromStorage: function(modelClass, refs, callback) {},
   serializeValue: function(value) {
     return value;
   },
