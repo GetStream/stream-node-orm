@@ -262,3 +262,33 @@ streamWaterline.enrichActivities(activities).then(function(enrichedActivities) {
 })
 ```
 
+### Customizing enrichment
+
+By default the enrichment system assumes that you're referencing items by their id. Sometimes you'll want to customize this behaviour. You might for instance use a username instead of an id. Alternatively you might mant to use a caching layer instead of the ORM for loading the data. The example below shows how to customize the lookup for all User entries. 
+
+```js
+// subclass streamMongoose
+function streamCustomEnrichment() {};
+streamCustomEnrichment.prototype = {
+    loadUserFromStorage: function(modelClass, objectsIds, callback) {
+        var found = {};
+        var paths = [];
+        if (typeof(modelClass.pathsToPopulate) === 'function') {
+            var paths = modelClass.pathsToPopulate();
+        }
+	// Here's the magic, use a username instead of id
+        modelClass.find({
+            username: {
+                $in: objectsIds
+            }
+        }).populate(paths).exec(function(err, docs) {
+            for (var i in docs) {
+                found[docs[i]._id] = docs[i];
+            }
+            callback(err, found);
+        });
+    }
+}
+util.inherits(streamCustomEnrichment, streamNode.mongoose.Backend);
+```
+
