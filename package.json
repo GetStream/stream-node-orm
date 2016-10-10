@@ -1,17 +1,17 @@
 {
   "name": "getstream-node",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Build newsfeeds and activity feeds on node.js using getstream.io",
   "author": "getstream.io <support@getstream.io> (https://getstream.io/)",
   "contributors": [
     {
       "name": "Mario Delgado",
       "email": "mariodel@gmail.com"
-  },
-  {
-    "name": "Thierry Schellenbach",
-    "email": "thierryschellenbach@gmail.com"
-  }
+    },
+    {
+      "name": "Thierry Schellenbach",
+      "email": "thierryschellenbach@gmail.com"
+    }
   ],
   "license": "BSD-3-Clause",
   "main": "./src/index.js",
