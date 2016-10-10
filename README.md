@@ -262,7 +262,7 @@ streamWaterline.enrichActivities(activities).then(function(enrichedActivities) {
 })
 ```
 
-### Customizing enrichment
+### Customizing enrichment (since 1.4.0)
 
 By default the enrichment system assumes that you're referencing items by their id. Sometimes you'll want to customize this behaviour. You might for instance use a username instead of an id. Alternatively you might mant to use a caching layer instead of the ORM for loading the data. The example below shows how to customize the lookup for all User entries. 
 
