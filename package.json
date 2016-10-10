@@ -13,7 +13,7 @@
     "email": "thierryschellenbach@gmail.com"
   }
   ],
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "main": "./src/index.js",
   "dependencies": {
     "async": ">=0.9.0",
