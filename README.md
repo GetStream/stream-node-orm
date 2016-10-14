@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/tbarbugli/stream-node.svg)](https://travis-ci.org/tbarbugli/stream-node)
 [![npm version](https://badge.fury.io/js/getstream-node.svg)](http://badge.fury.io/js/getstream-node)
+[![Coverage Status](https://coveralls.io/repos/github/GetStream/stream-node-orm/badge.svg?branch=refactor-tests)](https://coveralls.io/github/GetStream/stream-node-orm?branch=refactor-tests)
 
 This package helps you create activity streams & newsfeeds with NodeJS and [GetStream.io](https://getstream.io).
 
