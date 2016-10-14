@@ -48,8 +48,7 @@ module.exports = function (schema, options) {
 
     // User specific proto functions (with decent defaults)
     schema.methods.getStreamBackend = function () {
-        var stream = require('../index.js');
-        return new stream.BaseBackend();
+        throw new Error('Not implemented');
     };
 
     schema.methods.activityActorProp = function () {

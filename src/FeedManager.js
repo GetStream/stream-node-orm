@@ -1,5 +1,5 @@
-var stream = require('getstream');
-
+var stream = require('getstream')
+  , Promise = require('promise');
 var FeedManager = function () {
     this.initialize.apply(this, arguments);
 };
@@ -9,7 +9,7 @@ FeedManager.prototype = {
     initialize: function (settings) {
         this.settings = settings;
 
-        options = {};
+        var options = {};
 
         if (this.settings.apiLocation != '') {
             options.location = this.settings.apiLocation;
@@ -36,11 +36,11 @@ FeedManager.prototype = {
     },
 
     getNewsFeeds: function (userId) {
-        feeds = [];
-        newsFeeds = this.settings.newsFeeds;
+        var feeds = [];
+        var newsFeeds = this.settings.newsFeeds;
 
-        for (key in newsFeeds) {
-            slug = newsFeeds[key];
+        for (var key in newsFeeds) {
+            var slug = newsFeeds[key];
             feeds[slug] = this.client.feed(slug, userId);
         }
 
@@ -48,19 +48,27 @@ FeedManager.prototype = {
     },
 
     followUser: function (userId, targetUserId) {
-        newsFeeds = this.getNewsFeeds(userId);
+        var newsFeeds = this.getNewsFeeds(userId);
+        var ps = [];
 
-        for (slug in newsFeeds) {
-            newsFeeds[slug].follow(this.settings.userFeed, targetUserId);
+        for (var slug in newsFeeds) {
+            var p = newsFeeds[slug].follow(this.settings.userFeed, targetUserId);
+            ps.push(p);
         }
+
+        return Promise.all(ps);
     },
 
     unfollowUser: function (userId, targetUserId) {
-        newsFeeds = this.getNewsFeeds(userId);
+        var newsFeeds = this.getNewsFeeds(userId);
+        var ps = [];
 
-        for (slug in newsFeeds) {
-            newsFeeds[slug].unfollow(this.settings.userFeed, targetUserId);
+        for (var slug in newsFeeds) {
+            var p = newsFeeds[slug].unfollow(this.settings.userFeed, targetUserId);
+            ps.push(p);
         }
+
+        return Promise.all(ps);
     },
 
     getFeed: function (slug, userId) {
@@ -71,13 +79,14 @@ FeedManager.prototype = {
         if (this.trackingEnabled(instance)) {
             var activity = instance.createActivity();
             var backend = instance.getStreamBackend();
+            
             backend.serializeActivities([activity]);
+            
             var feedType = instance.activityActorFeed() || this.settings.userFeed;
             var userId = backend.getIdFromRef(activity.actor);
-            feed = this.getFeed(feedType, userId);
-            feed.addActivity(activity, function (err, response, body) {
-                if (err) console.log('err: ', err);
-            });
+            var feed = this.getFeed(feedType, userId);
+            
+            return feed.addActivity(activity);
         }
     },
 
@@ -85,13 +94,14 @@ FeedManager.prototype = {
         if (this.trackingEnabled(instance)) {
             var activity = instance.createActivity();
             var backend = instance.getStreamBackend();
+            
             backend.serializeActivities([activity]);
+            
             var feedType = instance.activityActorFeed() || this.settings.userFeed;
             var userId = backend.getIdFromRef(activity.actor);
-            feed = this.getFeed(feedType, userId);
-            feed.removeActivity({ 'foreignId': activity.foreign_id }, function (err, response, body) {
-                if (err) console.log('err: ', err);
-            });
+            var feed = this.getFeed(feedType, userId);
+
+            return feed.removeActivity({ 'foreignId': activity.foreign_id });
         }
     },
 

@@ -2,6 +2,7 @@ var should = require('should')
   , expect = require('expect.js')
   , fs = require('fs')
   , path = require('path')
+  , pmock = require('pmock')
   , Config = require('../src/config')
   , BaseBackend = require('../src/backends/base.js')
   , FeedManager = require('../src/FeedManager')
@@ -57,7 +58,7 @@ describe('feedManagerFactory', function() {
 
 });
 
-describe('Feed manager', function() {
+describe('Config', function() {
 
     it('default config', function() {
         var settings = main.FeedManager.settings;
@@ -66,32 +67,59 @@ describe('Feed manager', function() {
         expect(settings).to.eql(expected);
     });
 
-    describe('haha', function() {
-        var configDir = path.join(__dirname, './tmp');
-        var configFile = path.join(configDir, 'getstream.js');
+});
 
-        before(function() {
-            process.env.STREAM_NODE_CONFIG_DIR = configDir;
+describe('Config Env Var', function() {
+    var configDir = path.join(__dirname, './tmp');
+    var configFile = path.join(configDir, 'getstream.js');
 
+    before(function() {
+        this.env = pmock.env({
+            STREAM_NODE_CONFIG_DIR: configDir,
+        });
+
+        try {
             fs.mkdirSync(configDir);
             fs.writeFileSync(configFile, 'exports.config = { apiKey: 12345 };');
-        });
+        } catch(e) {
+            console.error(e);
+        }
+    });
 
-        after(function() { 
+    after(function() { 
+        try {
             fs.unlink(configFile);
             fs.rmdirSync(configDir);
-            delete process.env.STREAM_NODE_CONFIG_DIR;            
-        });
-
-        it('env var config dir', function() {
-            var settings = Config();
-
-            expect(settings.apiKey).to.be(12345);
-        });
+        } catch(e) {
+            console.error(e);
+        }
+        this.env.reset();
     });
 
+    it('env var config dir', function() {
+        var settings = Config();
 
-    it('override config', function() {
-
+        expect(settings.apiKey).to.be(12345);
     });
+
+});
+
+describe('Config Default', function() {
+
+    before(function() {
+        this.cwd = pmock.cwd('/tmp');
+    });
+
+    after(function() { 
+        this.cwd.reset();
+    });
+
+    it('env var config dir', function() {
+        var settings = Config();
+
+        var expected = require('../src/config.default.js').config;
+
+        expect(settings).to.eql(expected);
+    });
+
 });
