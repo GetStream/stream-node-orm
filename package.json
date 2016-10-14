@@ -42,7 +42,7 @@
     "should": "~4.0.0"
   },
   "peerDependencies": {
-    "mongoose": "^3.0.0"
+    "mongoose": ">=3.6"
   },
   "scripts": {
     "test": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' NODE_ENV=test ./node_modules/.bin/mocha test test/**/*_test.js",
