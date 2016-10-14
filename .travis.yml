@@ -34,7 +34,7 @@ node_js:
   include:
     - node_js: 4
       env: MONGOOSE_VERSION=3.0
-before_install:
+before_script:
   - npm install mongoose@$MONGOOSE_VERSION
 services:
   - mongodb
