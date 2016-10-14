@@ -10,13 +10,21 @@ matrix:
   include:
     - node_js: 4
       env: MONGOOSE_VERSION=4
+    - node_js: 4
       env: MONGOOSE_VERSION=3.7
+    - node_js: 4
       env: MONGOOSE_VERSION=3.6
+    - node_js: 4
       env: MONGOOSE_VERSION=3.5
+    - node_js: 4
       env: MONGOOSE_VERSION=3.4
+    - node_js: 4
       env: MONGOOSE_VERSION=3.3
+    - node_js: 4
       env: MONGOOSE_VERSION=3.2
+    - node_js: 4
       env: MONGOOSE_VERSION=3.1
+    - node_js: 4
       env: MONGOOSE_VERSION=3.0
 before_script:
   - npm install mongoose@$MONGOOSE_VERSION
