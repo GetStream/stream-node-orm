@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e
 npm test
-./bin/coveralls.sh 
-./node_modules/.bin/eslint src/**/*.js; 
+STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' ./bin/coveralls.sh 
+./node_modules/.bin/eslint src/**/*.js;
