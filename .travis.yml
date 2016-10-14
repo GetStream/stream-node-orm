@@ -7,15 +7,16 @@ node_js:
 env:
   - MONGOOSE_VERSION=3.8
 matrix:
-  - env: MONGOOSE_VERSION=4
-  - env: MONGOOSE_VERSION=3.7
-  - env: MONGOOSE_VERSION=3.6
-  - env: MONGOOSE_VERSION=3.5
-  - env: MONGOOSE_VERSION=3.4
-  - env: MONGOOSE_VERSION=3.3
-  - env: MONGOOSE_VERSION=3.2
-  - env: MONGOOSE_VERSION=3.1
-  - env: MONGOOSE_VERSION=3.0
+  include:
+    - env: MONGOOSE_VERSION=4
+    - env: MONGOOSE_VERSION=3.7
+    - env: MONGOOSE_VERSION=3.6
+    - env: MONGOOSE_VERSION=3.5
+    - env: MONGOOSE_VERSION=3.4
+    - env: MONGOOSE_VERSION=3.3
+    - env: MONGOOSE_VERSION=3.2
+    - env: MONGOOSE_VERSION=3.1
+    - env: MONGOOSE_VERSION=3.0
 before_script:
   - npm install mongoose@$MONGOOSE_VERSION
 services:
