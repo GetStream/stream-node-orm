@@ -14,5 +14,7 @@ matrix:
       env: MONGOOSE_VERSION=3.6
 before_script:
   - npm install mongoose@$MONGOOSE_VERSION
+script:
+  - bash ./bin/travis.sh
 services:
   - mongodb
