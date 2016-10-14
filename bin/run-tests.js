@@ -1,22 +1,21 @@
 var Mocha = require('mocha')
-  , fs = require('fs')
+  , glob = require('glob')
   , path = require('path');
 
 var mocha = new Mocha({});
 
-var dir = path.join(__dirname, '../test');
+var files = glob.sync('../test/**/*_test.js', { cwd: __dirname });
 
-fs.readdirSync(dir)
-    .filter(function(file) {
-        return file.substr(-8) === '_test.js';
-    })
-    .forEach(function(file) {
-        mocha.addFile(path.join(dir, file));
-    });
+files.forEach(function(file) {
+    file = path.join(__dirname, file);
+    mocha.addFile(file);
+});
 
 /* istanbul ignore next */
 mocha.run(function(failures) {
     process.on('exit', function() {
         process.exit(failures);
     });
+
+    process.exit();
 });

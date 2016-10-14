@@ -38,6 +38,7 @@
     "bson": "~0.5.4",
     "coveralls": "~2.11.14",
     "eslint": "~3.7.1",
+    "glob": "~7.1.1",
     "jscs": "~3.0.7",
     "mocha": "~3.1.0",
     "should": "~4.0.0"
@@ -47,7 +48,7 @@
   },
   "scripts": {
     "test": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' NODE_ENV=test ./node_modules/.bin/mocha test test/**/*_test.js",
-    "coverage": "./node_modules/.bin/istanbul bin/run-tests.js",
+    "coverage": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' ./node_modules/.bin/istanbul cover bin/run-tests.js",
     "preversion": "npm test",
     "postversion": "git push && git push --tags"
   },
