@@ -47,6 +47,7 @@
   },
   "scripts": {
     "test": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' NODE_ENV=test ./node_modules/.bin/mocha test test/**/*_test.js",
+    "coverage": "./node_modules/.bin/istanbul bin/run-tests.js",
     "preversion": "npm test",
     "postversion": "git push && git push --tags"
   },
