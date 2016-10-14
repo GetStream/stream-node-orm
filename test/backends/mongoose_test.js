@@ -7,14 +7,9 @@ var should = require('should'),
     sinon = require('sinon'), 
     mockery = require('mockery');
 
+require('../utils/promise');
+
 mongoose.connect('mongodb://localhost/test');
-
-Function.prototype.promisify = function(ctx) {
-    var args = Array.prototype.slice.call(arguments, 1);
-
-    var fn = Promise.denodeify(this);
-    return fn.apply(ctx, args);
-};
 
 var userSchema = new Schema({
     name: String,
@@ -332,7 +327,7 @@ describe('Backend', function () {
                 tweet2.createActivity()
             ];
 
-            return backend.enrichActivities(activities)
+            return backend.enrichActivities(activities);
         })
           .then(function (enriched) {
                 enriched.should.length(2);
