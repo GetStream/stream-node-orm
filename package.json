@@ -38,9 +38,11 @@
     "bson": "~0.5.4",
     "coveralls": "~2.11.14",
     "eslint": "~3.7.1",
+    "expect.js": "~0.3.1",
     "glob": "~7.1.1",
     "jscs": "~3.0.7",
     "mocha": "~3.1.0",
+    "rewire": "~2.5.2",
     "should": "~4.0.0"
   },
   "peerDependencies": {
