@@ -32,11 +32,12 @@ BaseBackend.prototype = {
     },
 
     iterActivityFieldsWithObjects: function (activities, fn) {
-        this.iterActivityFields(activities, function (field, value) { return (value !==  null && typeof (value) === 'object');}, fn);
+        this.iterActivityFields(activities, function (field, value) { 
+            return (value !==  null && typeof (value) === 'object');
+        }, fn);
     },
 
     iterActivityFieldsWithReferences: function (activities, fn) {
-        var self = this;
         this.iterActivityFields(activities, this.isReference, function (args) {
             var field = args['field'];
             args['modelRef'] = args['activity'][field].split(':')[0];
