@@ -10,20 +10,28 @@ node_js:
   include:
     - node_js: 4
       env: MONGOOSE_VERSION=4
+  include:
     - node_js: 4
       env: MONGOOSE_VERSION=3.7
+  include:
     - node_js: 4
       env: MONGOOSE_VERSION=3.6
+  include:
     - node_js: 4
       env: MONGOOSE_VERSION=3.5
+  include:
     - node_js: 4
       env: MONGOOSE_VERSION=3.4
+  include:
     - node_js: 4
       env: MONGOOSE_VERSION=3.3
+  include:
     - node_js: 4
       env: MONGOOSE_VERSION=3.2
+  include:
     - node_js: 4
       env: MONGOOSE_VERSION=3.1
+  include:
     - node_js: 4
       env: MONGOOSE_VERSION=3.0
 before_install:
