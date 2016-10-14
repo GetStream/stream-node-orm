@@ -3,6 +3,7 @@
   "version": "1.4.0",
   "description": "Build newsfeeds and activity feeds on node.js using getstream.io",
   "author": "getstream.io <support@getstream.io> (https://getstream.io/)",
+  "email": "support@getstream.io",
   "contributors": [
     {
       "name": "Mario Delgado",
@@ -10,34 +11,44 @@
     },
     {
       "name": "Thierry Schellenbach",
-      "email": "thierryschellenbach@gmail.com"
+      "email": "thierry@getstream.io"
+    },
+    {
+      "name": "Tommaso Barbugli",
+      "email": "tommaso@getstream.io"
+    },
+    {
+      "name": "Matthisk Heimensen",
+      "email": "matthisk@getstream.io"
     }
   ],
   "license": "BSD-3-Clause",
   "main": "./src/index.js",
   "dependencies": {
-    "async": ">=0.9.0",
-    "extend": ">=3.0.0",
-    "getstream": ">=3.5.0",
-    "istanbul": ">=0.3.13",
-    "mockery": ">=1.4.0",
-    "promise": ">=7.0.4",
-    "sinon": ">=1.14.1"
+    "async": "~0.9.0",
+    "extend": "~3.0.0",
+    "getstream": "~3.5.0",
+    "istanbul": "~0.3.13",
+    "mockery": "~1.4.0",
+    "promise": "~7.0.4",
+    "sinon": "~1.14.1"
   },
   "devDependencies": {
-    "mongoose": ">=3.0.0",
-    "bson": ">=0.5.4",
-    "mocha": ">=1.20.1",
-    "should": ">=4.0.0",
-    "better-assert": ">=1.0.0"
+    "bson": "~0.5.4",
+    "mocha": "~1.20.1",
+    "should": "~4.0.0",
+    "better-assert": "~1.0.0"
+  },
+  "peerDependencies": {
+    "mongoose": "^3.0.0"
   },
   "scripts": {
-    "test": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' NODE_ENV=test ./node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha test",
+    "test": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' NODE_ENV=test ./node_modules/.bin/mocha test test/**/*_test.js",
     "preversion": "npm test",
     "postversion": "git push && git push --tags"
   },
   "engines": {
-    "node": ">=0.6.19"
+    "node": ">=0.11 <=6.8"
   },
   "homepage": "http://getstream.io"
 }
