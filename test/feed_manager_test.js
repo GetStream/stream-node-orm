@@ -10,7 +10,7 @@ describe('FeedManager', function() {
     before(function() {
         // replace the module `request` with a stub object
         mockery.enable({});
-        requestStub = sinon.stub();
+        var requestStub = sinon.stub();
         mockery.registerMock('request', requestStub);
 
         this.env = pmock.env({

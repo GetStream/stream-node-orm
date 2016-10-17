@@ -28,6 +28,8 @@ var Config = function () {
 
     var default_config_file = path.join(__dirname, 'config.default.js');
 
+    console.log('exists', exists(config_file));
+
     /* istanbul skip else */
     if (exists(config_file)) {
         settings = _loadFile(config_file);
