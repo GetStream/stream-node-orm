@@ -19,7 +19,6 @@ Backend.prototype.serializeValue = function (value) {
 Backend.prototype.collectReferences = function (activities) {
     var modelReferences = {};
     this.iterActivityFieldsWithReferences(activities, function (args) {
-
         if (modelReferences[args.modelRef]) {
             modelReferences[args.modelRef].push(args.instanceRef);
         } else {

@@ -6,7 +6,7 @@ function _loadFile(path) {
 
     var settings = {};
 
-    config = JSON.parse(JSON.stringify(require(path).config));
+    var config = JSON.parse(JSON.stringify(require(path).config));
 
     Object.keys(config).forEach(function (key) {
         settings[key] = config[key];

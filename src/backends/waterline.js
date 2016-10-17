@@ -13,12 +13,12 @@ function Backend() {}
 util.inherits(Backend, baseBackend);
 
 Backend.prototype.serializeValue = function (value) {
-    throw 'Cant serialize for waterline since model.identity is not accessible from the instance';
-    if (typeof (value._id) != 'undefined') {
-        return value.constructor.modelName + ':' + value.id;
-    } else {
-        return value;
-    }
+    throw new Error('Cant serialize for waterline since model.identity is not accessible from the instance');
+    // if (typeof (value._id) != 'undefined') {
+    //     return value.constructor.modelName + ':' + value.id;
+    // } else {
+    //     return value;
+    // }
 };
 
 Backend.prototype.collectReferences = function (activities) {
@@ -65,16 +65,16 @@ Backend.prototype.getIdFromRef = function (ref) {
     return ref.split(':')[1];
 };
 
-function getReferencePaths(paths) {
-    var names = [];
-    for (var k in paths) {
-        if (paths[k].instance === 'ObjectID' && k !== 'id') {
-            names.push(paths[k].path);
-        }
-    }
+// function getReferencePaths(paths) {
+//     var names = [];
+//     for (var k in paths) {
+//         if (paths[k].instance === 'ObjectID' && k !== 'id') {
+//             names.push(paths[k].path);
+//         }
+//     }
 
-    return names.join(' ');
-}
+//     return names.join(' ');
+// }
 
 /*
 

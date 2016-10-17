@@ -1,6 +1,8 @@
 var should = require('should')
   , expect = require('expect.js')
   , fs = require('fs')
+  , mockFs = require('mock-fs')
+  , mockery = require('mockery')
   , path = require('path')
   , pmock = require('pmock')
   , Config = require('../src/config')
@@ -78,21 +80,18 @@ describe('Config Env Var', function() {
             STREAM_NODE_CONFIG_DIR: configDir,
         });
 
-        try {
-            fs.mkdirSync(configDir);
-            fs.writeFileSync(configFile, 'exports.config = { apiKey: 12345 };');
-        } catch(e) {
-            console.error(e);
-        }
+        var mockConfig = {};
+        mockConfig[configFile] = '';
+
+        mockFs(mockConfig);
+
+        mockery.enable();
+        mockery.registerMock(configFile, { config: { apiKey: 12345 } });
     });
 
     after(function() { 
-        try {
-            fs.unlink(configFile);
-            fs.rmdirSync(configDir);
-        } catch(e) {
-            console.error(e);
-        }
+        mockFs.restore();
+        mockery.disable();
         this.env.reset();
     });
 
