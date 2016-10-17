@@ -68,7 +68,7 @@ describe('Config', function() {
 
 });
 
-describe('Config Env Var', function() {
+describe.skip('Config Env Var', function() {
     var configDir = path.join(__dirname, './tmp');
     var configFile = path.join(configDir, 'getstream.js');
 
