@@ -4,6 +4,8 @@
 [![npm version](https://badge.fury.io/js/getstream-node.svg)](http://badge.fury.io/js/getstream-node)
 [![Coverage Status](https://coveralls.io/repos/github/GetStream/stream-node-orm/badge.svg?branch=refactor-tests)](https://coveralls.io/github/GetStream/stream-node-orm?branch=refactor-tests)
 
+[![NPM](https://nodei.co/npm/getstream-node.png)](https://nodei.co/npm/getstream-node/)
+
 This package helps you create activity streams & newsfeeds with NodeJS and [GetStream.io](https://getstream.io).
 
 ###Build activity streams & news feeds
