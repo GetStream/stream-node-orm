@@ -295,3 +295,20 @@ streamCustomEnrichment.prototype = {
 util.inherits(streamCustomEnrichment, streamNode.mongoose.Backend);
 ```
 
+### Contributing
+
+Running tests:
+
+```
+npm test
+```
+
+### Releasing
+
+Make sure your working directory is clean and run:
+
+```
+npm install
+npm version [ major | minor | patch ]
+npm publish
+```
