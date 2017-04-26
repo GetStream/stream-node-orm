@@ -1,11 +1,15 @@
-##Stream NodeJS
+## Stream Node.js
 
 [![Build Status](https://travis-ci.org/tbarbugli/stream-node.svg)](https://travis-ci.org/tbarbugli/stream-node)
 [![npm version](https://badge.fury.io/js/getstream-node.svg)](http://badge.fury.io/js/getstream-node)
 
-This package helps you create activity streams & newsfeeds with NodeJS and [GetStream.io](https://getstream.io).
+[stream-node-orm](https://github.com/GetStream/stream-node-orm) is a Node.js (Sails, Waterline) client for [Stream](https://getstream.io/).
 
-###Build activity streams & news feeds
+You can sign up for a Stream account at https://getstream.io/get_started.
+
+Note there is also a lower level [Node.js - Stream integration](https://github.com/getstream/stream-js) library which is suitable for all JavaScript applications.
+
+### Build activity streams & news feeds
 
 <p align="center">
   <img src="https://dvqg2dogggmn6.cloudfront.net/images/mood-home.png" alt="Examples of what you can build" title="What you can build"/>
@@ -40,7 +44,7 @@ Install getstream_node package with npm:
 
 #### Step 2 - Config file
 
-Copy `getstream.js` config file from `node_modules/getstream-node` into the root directory of your application  
+Copy `getstream.js` config file from `node_modules/getstream-node` into the root directory of your application
 Make sure you require the getstream-node early on in your application (eg. in app.js)
 
 #### Step 3 - Get your API key
@@ -50,7 +54,7 @@ Login with Github on [getstream.io](https://getstream.io/) and edit the configur
 
 ###Model integration
 
-Stream Nodejs can automatically publish new activities to your feeds. To do that you only need to register the models you want to publish with this library.
+Stream Node.js can automatically publish new activities to your feeds. To do that you only need to register the models you want to publish with this library.
 
 ```js
 var stream = require('getstream-node');
@@ -73,8 +77,8 @@ Every time a Tweet is created it will be added to the user's feed. Users which f
 Models are stored in feeds as activities. An activity is composed of at least the following fields: **actor**, **verb**, **object**, **time**. You can also add more custom data if needed.
 The Activity mixin will try to set things up automatically:
 
-**object** is a reference to the model instance  
-**actor** is a reference to the user attribute of the instance  
+**object** is a reference to the model instance
+**actor** is a reference to the user attribute of the instance
 **verb** is a string representation of the class name
 
 By default the actor field will look for an attribute called user or actor and a field called created_at to track creation time.
@@ -121,7 +125,7 @@ tweetSchema.methods.createActivity = function() {
 
 ###Feed manager
 
-This packages comes with a feed_manager class that helps with all common feed operations.  
+This packages comes with a feed_manager class that helps with all common feed operations.
 
 ####Feeds bundled with feed_manager
 
@@ -129,10 +133,10 @@ To get you started the manager has 4 feeds pre-configured. You can add more feed
 The three feeds are divided in three categories.
 
 #####User feed:
-The user feed stores all activities for a user. Think of it as your personal Facebook page. You can easily get this feed from the manager.  
+The user feed stores all activities for a user. Think of it as your personal Facebook page. You can easily get this feed from the manager.
 ```js
 FeedManager.getUserFeed(req.user.id);
-```  
+```
 
 #####News feeds:
 The news feeds store the activities from the people you follow.
@@ -205,7 +209,7 @@ router.get('/flat', ensureAuthenticated, function(req, res, next){
         .then(function (enrichedActivities) {
             return res.render('feed', {location: 'feed', user: req.user, activities: enrichedActivities, path: req.url});
         })
-        .catch(next)   
+        .catch(next)
     });
 });
 ```
@@ -230,19 +234,15 @@ tweetSchema.statics.pathsToPopulate = function() {
 };
 ```
 
+### Full documentation and Low level APIs access
 
-
-### Low level APIs access
-
-You can also use the low level JS API directly.
+When needed you can also use the [low level JavaScript API](https://github.com/getstream/stream-js) directly. Documentation is available at the [Stream website](https://getstream.io/docs/?language=js).
 
 ```js
 var streamNode = require('getstream-node');
 var client = streamNode.FeedManager.client
 // client.addActivity, client.removeActivity etc are all available
 ```
-
-The full documentation for the low level API is available in the [getstream.io documentation](https://getstream.io/docs/).
 
 ### Enrichment
 
@@ -264,7 +264,7 @@ streamWaterline.enrichActivities(activities).then(function(enrichedActivities) {
 
 ### Customizing enrichment (since 1.4.0)
 
-By default the enrichment system assumes that you're referencing items by their id. Sometimes you'll want to customize this behaviour. You might for instance use a username instead of an id. Alternatively you might mant to use a caching layer instead of the ORM for loading the data. The example below shows how to customize the lookup for all User entries. 
+By default the enrichment system assumes that you're referencing items by their id. Sometimes you'll want to customize this behaviour. You might for instance use a username instead of an id. Alternatively you might mant to use a caching layer instead of the ORM for loading the data. The example below shows how to customize the lookup for all User entries.
 
 ```js
 // subclass streamMongoose
@@ -292,3 +292,8 @@ streamCustomEnrichment.prototype = {
 util.inherits(streamCustomEnrichment, streamNode.mongoose.Backend);
 ```
 
+### Copyright and License Information
+
+Copyright (c) 2015-2017 Stream.io Inc, and individual contributors. All rights reserved.
+
+See the file "LICENSE" for information on the history of this software, terms & conditions for usage, and a DISCLAIMER OF ALL WARRANTIES.
