@@ -2,7 +2,7 @@ var baseActivitySchemaPlugin = require('./activity.js');
 var util = require("util");
 var baseBackend = require('./base');
 var mongoose = require('mongoose');
-var stream = require('../index.js')
+var stream = require('../index.js');
 
 function Backend() {}
 
