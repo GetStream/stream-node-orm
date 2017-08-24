@@ -1,6 +1,6 @@
 {
   "name": "getstream-node",
-  "version": "1.4.1",
+  "version": "1.4.0",
   "description": "Build newsfeeds and activity feeds on node.js using getstream.io",
   "author": "getstream.io <support@getstream.io> (https://getstream.io/)",
   "contributors": [
