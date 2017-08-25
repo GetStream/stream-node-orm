@@ -62,3 +62,5 @@ Backend.prototype.getClassFromRef = function(ref) {
 Backend.prototype.getIdFromRef = function(ref) {
 	return ref.split(':')[1];
 };
+
+module.exports.Backend = Backend;
