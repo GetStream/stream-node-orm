@@ -123,7 +123,7 @@ BaseBackend.prototype = {
 							.enrichActivities(aggregated['activities'])
 							.then(done.bind(this, null), done);
 					};
-				})(aggregatedActivities[i]),
+				})(aggregatedActivities[i])
 			);
 		}
 
