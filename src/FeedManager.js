@@ -1,99 +1,109 @@
-var stream = require('getstream');
-
+var stream = require('getstream')
+  , Promise = require('promise');
 var FeedManager = function () {
-  this.initialize.apply(this, arguments);
+    this.initialize.apply(this, arguments);
 };
 
 FeedManager.prototype = {
 
-  initialize: function(settings) {
-    this.settings = settings;
+    initialize: function (settings) {
+        this.settings = settings;
 
-    options = {};
+        var options = {};
 
-    if (this.settings.apiLocation != "") {
-      options.location = this.settings.apiLocation;
-    }
+        if (this.settings.apiLocation != '') {
+            options.location = this.settings.apiLocation;
+        }
 
-    if (typeof(process) !== "undefined" && process.env.STREAM_URL) {
-      this.client = stream.connect();
-    } else {
-      this.client = stream.connect(this.settings.apiKey, this.settings.apiSecret, this.settings.apiAppId, options);
-    }
-    
-  },
+        if (typeof (process) !== 'undefined' && process.env.STREAM_URL) {
+            this.client = stream.connect();
+        } else {
+            this.client = stream.connect(this.settings.apiKey, this.settings.apiSecret, this.settings.apiAppId, options);
+        }
 
-  trackingEnabled: function(instance) {
-    return process.env.NODE_ENV === 'test' ? false : true;
-  },
+    },
 
-  getUserFeed: function(userId) {
-    return this.client.feed(this.settings.userFeed, userId);
-  },
+    trackingEnabled: function (instance) {
+        return process.env.NODE_ENV === 'test' ? false : true;
+    },
 
-  getNotificationFeed: function(userId) {
-    return this.client.feed(this.settings.notificationFeed, userId);
-  },
-  
-  getNewsFeeds: function(userId) {
-    feeds = [];
-    newsFeeds = this.settings.newsFeeds;
+    getUserFeed: function (userId) {
+        return this.client.feed(this.settings.userFeed, userId);
+    },
 
-    for (key in newsFeeds) {
-      slug = newsFeeds[key];
-      feeds[slug] = this.client.feed(slug, userId);
-    }
+    getNotificationFeed: function (userId) {
+        return this.client.feed(this.settings.notificationFeed, userId);
+    },
 
-    return feeds;
-  },
+    getNewsFeeds: function (userId) {
+        var feeds = [];
+        var newsFeeds = this.settings.newsFeeds;
 
-  followUser: function(userId, targetUserId) {
-    newsFeeds = this.getNewsFeeds(userId);
+        for (var key in newsFeeds) {
+            var slug = newsFeeds[key];
+            feeds[slug] = this.client.feed(slug, userId);
+        }
 
-    for (slug in newsFeeds) {
-      newsFeeds[slug].follow(this.settings.userFeed, targetUserId);
-    }
-  },
+        return feeds;
+    },
 
-  unfollowUser: function(userId, targetUserId) {
-    newsFeeds = this.getNewsFeeds(userId);
+    followUser: function (userId, targetUserId) {
+        var newsFeeds = this.getNewsFeeds(userId);
+        var ps = [];
 
-    for (slug in newsFeeds) {
-      newsFeeds[slug].unfollow(this.settings.userFeed, targetUserId);
-    }
-  },
+        for (var slug in newsFeeds) {
+            var p = newsFeeds[slug].follow(this.settings.userFeed, targetUserId);
+            ps.push(p);
+        }
 
-  getFeed: function(slug, userId) {
-    return this.client.feed(slug, userId);
-  },
+        return Promise.all(ps);
+    },
 
-  activityCreated: function(instance) {
-    if (this.trackingEnabled(instance)) {
-      var activity = instance.createActivity();
-      var backend = instance.getStreamBackend();
-      backend.serializeActivities([activity]);
-      var feedType = instance.activityActorFeed() || this.settings.userFeed;
-      var userId = backend.getIdFromRef(activity.actor);
-      feed = this.getFeed(feedType, userId);
-      feed.addActivity(activity, function(err, response, body) {
-        if (err) console.log('err: ', err);
-      });
-    }
-  },
+    unfollowUser: function (userId, targetUserId) {
+        var newsFeeds = this.getNewsFeeds(userId);
+        var ps = [];
 
-  activityDeleted: function(instance) {
-    if (this.trackingEnabled(instance)) {
-      var activity = instance.createActivity();
-      var backend = instance.getStreamBackend();
-      backend.serializeActivities([activity]);
-      var feedType = instance.activityActorFeed() || this.settings.userFeed;
-      var userId = backend.getIdFromRef(activity.actor);
-      feed = this.getFeed(feedType, userId);
-      feed.removeActivity({'foreignId': activity.foreign_id}, function(err, response, body) {
-        if (err) console.log('err: ', err);
-      });
-    }
-  }
+        for (var slug in newsFeeds) {
+            var p = newsFeeds[slug].unfollow(this.settings.userFeed, targetUserId);
+            ps.push(p);
+        }
+
+        return Promise.all(ps);
+    },
+
+    getFeed: function (slug, userId) {
+        return this.client.feed(slug, userId);
+    },
+
+    activityCreated: function (instance) {
+        if (this.trackingEnabled(instance)) {
+            var activity = instance.createActivity();
+            var backend = instance.getStreamBackend();
+            
+            backend.serializeActivities([activity]);
+            
+            var feedType = instance.activityActorFeed() || this.settings.userFeed;
+            var userId = backend.getIdFromRef(activity.actor);
+            var feed = this.getFeed(feedType, userId);
+            
+            return feed.addActivity(activity);
+        }
+    },
+
+    activityDeleted: function (instance) {
+        if (this.trackingEnabled(instance)) {
+            var activity = instance.createActivity();
+            var backend = instance.getStreamBackend();
+            
+            backend.serializeActivities([activity]);
+            
+            var feedType = instance.activityActorFeed() || this.settings.userFeed;
+            var userId = backend.getIdFromRef(activity.actor);
+            var feed = this.getFeed(feedType, userId);
+
+            return feed.removeActivity({ 'foreignId': activity.foreign_id });
+        }
+    },
 
 };
 

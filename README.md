@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.org/tbarbugli/stream-node.svg)](https://travis-ci.org/tbarbugli/stream-node)
 [![npm version](https://badge.fury.io/js/getstream-node.svg)](http://badge.fury.io/js/getstream-node)
+[![Coverage Status](https://coveralls.io/repos/github/GetStream/stream-node-orm/badge.svg?branch=refactor-tests)](https://coveralls.io/github/GetStream/stream-node-orm?branch=refactor-tests)
+
+[![NPM](https://nodei.co/npm/getstream-node.png)](https://nodei.co/npm/getstream-node/)
 
 [stream-node-orm](https://github.com/GetStream/stream-node-orm) is a Node.js (Sails, Waterline) client for [Stream](https://getstream.io/).
 
@@ -292,6 +295,24 @@ streamCustomEnrichment.prototype = {
 util.inherits(streamCustomEnrichment, streamNode.mongoose.Backend);
 ```
 
+### Contributing
+
+Running tests:
+
+```
+npm test
+```
+
+### Releasing
+
+Make sure your working directory is clean and run:
+
+```
+npm install
+npm version [ major | minor | patch ]
+npm publish
+```
+=======
 ### Copyright and License Information
 
 Copyright (c) 2015-2017 Stream.io Inc, and individual contributors. All rights reserved.

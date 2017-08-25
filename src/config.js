@@ -4,37 +4,40 @@ var path = require('path'),
 
 function _loadFile(path) {
 
-  var settings = {};
+    var settings = {};
 
-  config = JSON.parse(JSON.stringify(require(path).config));
+    var config = JSON.parse(JSON.stringify(require(path).config));
 
-  Object.keys(config).forEach(function (key) {
-    settings[key] = config[key]
-  });
+    Object.keys(config).forEach(function (key) {
+        settings[key] = config[key];
+    });
 
-  return settings;
+    return settings;
 }
 
 var Config = function () {
-  var settings = {},
-      config_file = '';
-  // load config from defaults or config file
+    var settings = {},
+        config_file = '';
+    // load config from defaults or config file
 
-  if (typeof(process) != "undefined" && process.env.STREAM_NODE_CONFIG_DIR) {
-    config_file = process.env.STREAM_NODE_CONFIG_DIR + '/getstream.js';
-  } else {
-    config_file = process.cwd() + '/getstream.js';
-  }
+    if (typeof (process) != 'undefined' && process.env.STREAM_NODE_CONFIG_DIR) {
+        config_file = process.env.STREAM_NODE_CONFIG_DIR + '/getstream.js';
+    } else {
+        config_file = process.cwd() + '/getstream.js';
+    }
 
-  var default_config_file = path.join(__dirname, 'config.default.js');
+    var default_config_file = path.join(__dirname, 'config.default.js');
 
-  if (exists(config_file)) {
-    settings = _loadFile(config_file);
-  } else {
-    settings = _loadFile(default_config_file);
-  }
+    console.log('exists', exists(config_file));
 
-  return settings;
+    /* istanbul skip else */
+    if (exists(config_file)) {
+        settings = _loadFile(config_file);
+    } else {
+        settings = _loadFile(default_config_file);
+    }
+
+    return settings;
 };
 
 module.exports = Config;

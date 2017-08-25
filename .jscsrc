@@ -1,0 +1,9 @@
+{
+    "preset": "airbnb",
+    "requirePaddingNewLinesBeforeLineComments": null,
+    "disallowQuotedKeysInObjects": false,
+    "disallowMultipleVarDecl": false,
+    "requireDotNotation": false,
+    "safeContextKeyword": null,
+    "validateIndentation": 4,
+}
