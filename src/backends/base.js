@@ -31,13 +31,9 @@ BaseBackend.prototype = {
 	},
 
 	iterActivityFieldsWithObjects: function(activities, fn) {
-		this.iterActivityFields(
-			activities,
-			function(field, value) {
+		this.iterActivityFields(activities, function(field, value) {
 				return value !== null && typeof value === 'object';
-			},
-			fn,
-		);
+		}, fn);
 	},
 
 	iterActivityFieldsWithReferences: function(activities, fn) {
