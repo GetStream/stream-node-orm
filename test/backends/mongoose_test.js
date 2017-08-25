@@ -346,7 +346,7 @@ describe('Backend', function() {
 
 		return Promise.all([
 			tweet1.save.promisify(tweet1),
-			tweet2.save.promisify(tweet2),
+			tweet2.save.promisify(tweet2)
 		])
 			.then(function() {
 				var activities = [
