@@ -1,6 +1,6 @@
 {
   "name": "getstream-node",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Build newsfeeds and activity feeds on node.js using getstream.io",
   "author": "getstream.io <support@getstream.io> (https://getstream.io/)",
   "email": "support@getstream.io",
@@ -21,18 +21,22 @@
     {
       "name": "Matthisk Heimensen",
       "email": "matthisk@getstream.io"
+    },
+    {
+      "name": "Nick Parsons",
+      "email": "nparsons08@gmail.com"
     }
   ],
   "license": "BSD-3-Clause",
   "main": "./src/index.js",
   "dependencies": {
-    "async": "~0.9.0",
-    "extend": "~3.0.0",
-    "getstream": "~3.5.0",
-    "istanbul": "~0.4.5",
-    "mockery": "~1.4.0",
-    "promise": "~7.0.4",
-    "sinon": "~1.14.1"
+    "async": ">=2.5.0",
+    "extend": ">=3.0.1",
+    "getstream": ">=3.5.0",
+    "istanbul": ">=0.4.5",
+    "mockery": ">=2.1.0",
+    "promise": ">=8.0.1",
+    "sinon": ">=3.2.1"
   },
   "devDependencies": {
     "better-assert": "~1.0.0",
@@ -46,10 +50,8 @@
     "mock-fs": "~3.11.0",
     "pmock": "~0.2.3",
     "rewire": "~2.5.2",
-    "should": "~4.0.0"
-  },
-  "peerDependencies": {
-    "mongoose": ">=3.6"
+    "should": "~4.0.0",
+    "mongoose": ">=4.11.8"
   },
   "scripts": {
     "test": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' NODE_ENV=test ./node_modules/.bin/mocha test test/**/*_test.js",
@@ -58,7 +60,7 @@
     "postversion": "git push && git push --tags"
   },
   "engines": {
-    "node": ">=0.11 <=6.8"
+    "node": ">=0.11 <=8.4"
   },
   "homepage": "http://getstream.io"
 }
