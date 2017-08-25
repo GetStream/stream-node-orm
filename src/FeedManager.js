@@ -62,10 +62,7 @@ FeedManager.prototype = {
 		var ps = [];
 
 		for (var slug in newsFeeds) {
-			var p = newsFeeds[slug].unfollow(
-				this.settings.userFeed,
-				targetUserId,
-			);
+			var p = newsFeeds[slug].unfollow(this.settings.userFeed, targetUserId);
 			ps.push(p);
 		}
 
