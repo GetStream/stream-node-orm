@@ -78,7 +78,7 @@ BaseBackend.prototype = {
 			},
 			function(err) {
 				callback(err, objects);
-			},
+			}
 		);
 	},
 

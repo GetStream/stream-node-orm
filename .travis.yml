@@ -11,8 +11,6 @@ matrix:
       env: MONGOOSE_VERSION=4.0
     - node_js: 8
       env: MONGOOSE_VERSION=3.6
-    - node_js: 8
-      env: MONGOOSE_VERSION=3.0
 before_script:
   - npm install mongoose@$MONGOOSE_VERSION
 script:
