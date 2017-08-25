@@ -1,7 +1,8 @@
 language: node_js
 node_js:
-  - "0.12"
-  - "0.10"
-  - "iojs"
+  - "node"
+  - "lts/*"
+  - "8"
+  - "7"
 services:
   - mongodb
