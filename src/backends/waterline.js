@@ -32,11 +32,7 @@ Backend.prototype.serializeValue = function(value) {
 	});
 
 	return modelReferences;
-}), (Backend.prototype.loadFromStorage = function(
-	modelClass,
-	objectIds,
-	callback,
-) {
+}), (Backend.prototype.loadFromStorage = function(modelClass, objectIds, callback) {
 	var found = {};
 	var paths = [];
 	if (typeof modelClass.pathsToPopulate === 'function') {
