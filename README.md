@@ -6,13 +6,13 @@
 
 [![NPM](https://nodei.co/npm/getstream-node.png)](https://nodei.co/npm/getstream-node/)
 
-[stream-node-orm](https://github.com/GetStream/stream-node-orm) is a Node.js (Sails, Waterline) client for [Stream](https://getstream.io/).
+[stream-node-orm](https://github.com/GetStream/stream-node-orm) is a Node.js (Mongoose & Waterline) client for [Stream](https://getstream.io/).
 
 You can sign up for a Stream account at https://getstream.io/get_started.
 
 Note there is also a lower level [Node.js - Stream integration](https://github.com/getstream/stream-js) library which is suitable for all JavaScript applications.
 
-### Build activity streams & news feeds
+### Build Activity Streams & News Feeds
 
 <p align="center">
   <img src="https://dvqg2dogggmn6.cloudfront.net/images/mood-home.png" alt="Examples of what you can build" title="What you can build"/>
@@ -37,7 +37,7 @@ Stream node currently supports:
 
 You can check out our example app on Github [https://github.com/GetStream/Stream-Example-Nodejs](https://github.com/GetStream/Stream-Example-Nodejs)
 
-###Installation
+### Installation
 
 #### Step 1 - NPM
 
@@ -75,7 +75,7 @@ stream.mongoose.setupMongoose(mongoose);
 
 Every time a Tweet is created it will be added to the user's feed. Users which follow the given user will also automatically get the new tweet in their feeds.
 
-####Activity fields
+#### Activity Fields
 
 Models are stored in feeds as activities. An activity is composed of at least the following fields: **actor**, **verb**, **object**, **time**. You can also add more custom data if needed.
 The Activity mixin will try to set things up automatically:
@@ -101,7 +101,7 @@ tweetSchema.methods.activityActorProp = function() {
 }
 ```
 
-#### Customizing the activity
+#### Customizing the Activity
 
 Sometimes you'll want full control over the activity that's send to getstream.io.
 To do that you can overwrite the default createActivity method on the model
@@ -126,22 +126,22 @@ tweetSchema.methods.createActivity = function() {
   }
 ```
 
-###Feed manager
+### Feed Manager
 
 This packages comes with a feed_manager class that helps with all common feed operations.
 
-####Feeds bundled with feed_manager
+#### Feeds Bundled with feed_manager
 
 To get you started the manager has 4 feeds pre-configured. You can add more feeds if your application needs it.
 The three feeds are divided in three categories.
 
-#####User feed:
+##### User Feed:
 The user feed stores all activities for a user. Think of it as your personal Facebook page. You can easily get this feed from the manager.
 ```js
 FeedManager.getUserFeed(req.user.id);
 ```
 
-#####News feeds:
+##### News Feeds:
 The news feeds store the activities from the people you follow.
 There is both a flat newsfeed (similar to twitter) and an aggregated newsfeed (like facebook).
 
@@ -150,7 +150,7 @@ var flatFeed = FeedManager.getNewsFeeds(foundUser._id)['timeline_flat'];
 var aggregatedFeed = FeedManager.getNewsFeeds(req.user.id)['timeline_aggregated'];
 ```
 
-#####Notification feed:
+##### Notification Feed:
 The notification feed can be used to build notification functionality.
 
 <p align="center">
@@ -181,16 +181,16 @@ followSchema.methods.activityNotify = function() {
 };
 ```
 
-####Follow a feed
+#### Follow a Feed
 To follow the created newsfeeds you need to notify the system about follow relationships. The manager comes with APIs to let a user's news feeds follow another user's feed. This code lets the current user's flat and aggregated feeds follow the target_user's personal feed.
 
 ```
 FeedManager.followUser(userId, targetId);
 ```
 
-### Showing the newsfeed
+### Showing the Newsfeed
 
-####Activity enrichment
+#### Activity Enrichment
 
 When you read data from feeds, a like activity will look like this:
 
@@ -219,7 +219,7 @@ router.get('/flat', ensureAuthenticated, function(req, res, next){
 
 Promises are used to pipe the asynchronous result of `flatFeed.get` and `StreamBackend.enrichActivities` through our code.
 
-###Temporarily disabling the model sync
+### Temporarily Disabling the Model Sync
 
 Model synchronization can be disabled manually via environment variable.
 
@@ -227,7 +227,7 @@ Model synchronization can be disabled manually via environment variable.
 NODE_ENV=test npm test
 ```
 
-####Automatically populate paths:
+#### Automatically Populate Paths:
 
 You can automatically populate paths during enrichment via the pathsToPopulate static.
 
@@ -237,7 +237,7 @@ tweetSchema.statics.pathsToPopulate = function() {
 };
 ```
 
-### Full documentation and Low level APIs access
+### Full Documentation and Low Level APIs Access
 
 When needed you can also use the [low level JavaScript API](https://github.com/getstream/stream-js) directly. Documentation is available at the [Stream website](https://getstream.io/docs/?language=js).
 
@@ -265,9 +265,9 @@ streamWaterline.enrichActivities(activities).then(function(enrichedActivities) {
 })
 ```
 
-### Customizing enrichment (since 1.4.0)
+### Customizing Enrichment (since 1.4.0)
 
-By default the enrichment system assumes that you're referencing items by their id. Sometimes you'll want to customize this behaviour. You might for instance use a username instead of an id. Alternatively you might mant to use a caching layer instead of the ORM for loading the data. The example below shows how to customize the lookup for all User entries.
+By default the enrichment system assumes that you're referencing items by their id. Sometimes you'll want to customize this behavior. You might for instance use a username instead of an id. Alternatively you might mant to use a caching layer instead of the ORM for loading the data. The example below shows how to customize the lookup for all User entries.
 
 ```js
 // subclass streamMongoose
@@ -312,7 +312,14 @@ npm install
 npm version [ major | minor | patch ]
 npm publish
 ```
-=======
+
+### Supported Node.js Versions
+```
+v8.x
+v7.x
+v6.x
+```
+
 ### Copyright and License Information
 
 Copyright (c) 2015-2017 Stream.io Inc, and individual contributors. All rights reserved.
