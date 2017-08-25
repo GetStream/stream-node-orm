@@ -35,7 +35,7 @@ describe('Base Backend', function() {
 
 			expect(refs).to.eql({
 				User: ['123456'],
-				Tweet: ['00001'],
+				Tweet: ['00001']
 			});
 		});
 
@@ -50,7 +50,7 @@ describe('Base Backend', function() {
 
 			expect(refs).to.eql({
 				User: ['123456'],
-				Tweet: ['00001', '00002'],
+				Tweet: ['00001', '00002']
 			});
 		});
 	});
@@ -69,7 +69,7 @@ describe('Base Backend', function() {
 		expect(activity).to.eql({
 			actor: 'User:123456',
 			object: 'Tweet:1',
-			other: 'matthisk',
+			other: 'matthisk'
 		});
 	});
 
