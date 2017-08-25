@@ -147,35 +147,15 @@ describe('Backend', function() {
 					firstAggregation.should.have
 						.property('activities')
 						.with.lengthOf(1);
-					firstAggregation['activities'][0].should.have.property(
-						'actor',
-					);
-					firstAggregation['activities'][0].should.have.property(
-						'object',
-					);
-					firstAggregation[
-						'activities'
-					][0].object.should.have.property('_id');
-					firstAggregation['activities'][0].should.have.property(
-						'verb',
-					);
-					secondAggregation['activities'][0].should.have.property(
-						'actor',
-					);
-					secondAggregation['activities'][0].should.have.property(
-						'object',
-					);
-					secondAggregation[
-						'activities'
-					][0].object.should.have.property('_id');
-					secondAggregation['activities'][0].should.have.property(
-						'verb',
-					);
-					firstAggregation[
-						'activities'
-					][0].object._id.should.not.equal(
-						secondAggregation['activities'][0].object._id,
-					);
+					firstAggregation['activities'][0].should.have.property('actor');
+					firstAggregation['activities'][0].should.have.property('object');
+					firstAggregation['activities'][0].object.should.have.property('_id');
+					firstAggregation['activities'][0].should.have.property('verb');
+					secondAggregation['activities'][0].should.have.property('actor');
+					secondAggregation['activities'][0].should.have.property('object');
+					secondAggregation['activities'][0].object.should.have.property('_id');
+					secondAggregation['activities'][0].should.have.property('verb');
+					firstAggregation['activities'][0].object._id.should.not.equal(secondAggregation['activities'][0].object._id);
 					done();
 				})
 				.catch(done);
