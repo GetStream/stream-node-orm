@@ -84,10 +84,7 @@ BaseBackend.prototype = {
 
 	enrichActivities: function(activities) {
 		// Return a Promise instead of using node style callbacks (_enrichActivities accepts one argument + callback)
-		return Promise.denodeify(this._enrichActivities, 1).call(
-			this,
-			activities,
-		);
+		return Promise.denodeify(this._enrichActivities, 1).call(this, activities);
 	},
 
 	_enrichActivities: function(activities, callback) {
@@ -111,10 +108,7 @@ BaseBackend.prototype = {
 
 	enrichAggregatedActivities: function(aggregatedActivities) {
 		// Return a Promise instead of using node style callbacks (_enrichAggregatedActivities accepts one argument + callback)
-		return Promise.denodeify(this._enrichAggregatedActivities, 1).call(
-			this,
-			aggregatedActivities,
-		);
+		return Promise.denodeify(this._enrichAggregatedActivities, 1).call(this, aggregatedActivities);
 	},
 
 	_enrichAggregatedActivities: function(aggregatedActivities, callback) {
