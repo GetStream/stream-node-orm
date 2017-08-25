@@ -54,7 +54,7 @@
 		"mongoose": ">=4.11.8"
 	},
 	"scripts": {
-		"test": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' NODE_ENV=test ./node_modules/.bin/mocha --timeout 15000 test test/**/*_test.js",
+		"test": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' NODE_ENV=test ./node_modules/.bin/mocha --timeout 30000 test test/**/*_test.js",
 		"coverage": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' ./node_modules/.bin/istanbul cover bin/run-tests.js",
 		"preversion": "npm test",
 		"postversion": "git push && git push --tags"
