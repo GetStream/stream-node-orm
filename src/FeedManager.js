@@ -17,12 +17,7 @@ FeedManager.prototype = {
 		if (typeof process !== 'undefined' && process.env.STREAM_URL) {
 			this.client = stream.connect();
 		} else {
-			this.client = stream.connect(
-				this.settings.apiKey,
-				this.settings.apiSecret,
-				this.settings.apiAppId,
-				options,
-			);
+			this.client = stream.connect(this.settings.apiKey, this.settings.apiSecret, this.settings.apiAppId, options);
 		}
 	},
 
