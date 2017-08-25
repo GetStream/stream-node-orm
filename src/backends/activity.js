@@ -7,11 +7,7 @@ module.exports = function(schema, options) {
 	schema.methods.activityGetActor = function() {
 		var actor = this[this.activityActorProp()];
 		if (typeof actor === 'undefined') {
-			throw new Error(
-				'Actor prop ' +
-					this.activityActorProp() +
-					' not found on model instance',
-			);
+			throw new Error('Actor prop ' + this.activityActorProp() + ' not found on model instance');
 		}
 
 		return actor;
