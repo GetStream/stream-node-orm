@@ -330,10 +330,7 @@ describe('Backend', function() {
 				var activity = tweet.createActivity();
 				tweet.getStreamBackend().serializeActivities([activity]);
 
-				activity.should.have.property(
-					'actor',
-					'User:' + tweet.actor._id,
-				);
+				activity.should.have.property('actor', 'User:' + tweet.actor._id);
 				activity.should.have.property('object', 'Tweet:' + tweet._id);
 			});
 	});
