@@ -11,7 +11,7 @@ require('../utils/promise');
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://localhost/test', { useMongoClient: true });
 
 var userSchema = new Schema({
 	name: String,
