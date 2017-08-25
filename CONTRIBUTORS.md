@@ -8,3 +8,5 @@ Stream-Example-Nodejs
 * **[Thierry Schellenbach](https://github.com/tschellenbach)**
 
 * **[Matthisk Heimensen](https://github.com/matthisk)**
+
+* **[Nick Parsons](https://github.com/nparsons08)**

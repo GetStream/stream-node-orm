@@ -1,53 +1,43 @@
 exports.config = {
-
-  /**
+	/**
   * GetStream.io API key
   */
-  apiKey: "",
-  
+	apiKey: '',
 
-  /**
+	/**
   * GetStream.io API Secret
   */
-  apiSecret: "",
-  
+	apiSecret: '',
 
-  /**
+	/**
   * GetStream.io API App ID
   */
-  apiAppId: "",
-  
+	apiAppId: '',
 
-  /**
+	/**
   * GetStream.io API Location
   */
-  apiLocation: "",
-  
+	apiLocation: '',
 
-  /**
+	/**
   * GetStream.io User Feed slug
   */
-  userFeed: "user",
-  
+	userFeed: 'user',
 
-  /**
+	/**
   * GetStream.io Notification Feed slug
   */
-  notificationFeed: "notification",
+	notificationFeed: 'notification',
 
-
-  newsFeeds: {
-    
-    /**
+	newsFeeds: {
+		/**
     * GetStream.io Flat Feed slug
     */
-    flat: "flat",
-    
-    /**
+		flat: 'flat',
+
+		/**
     * GetStream.io Aggregated Feed slug
     */
-    aggregated: "aggregated"
-  }
-
-  
-}
+		aggregated: 'aggregated',
+	},
+};

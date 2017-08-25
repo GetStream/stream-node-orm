@@ -1,70 +1,75 @@
-module.exports = function (schema, options) {
-    // Common proto functions
-    schema.methods.activityActorFeed = function () {
-        return null;
-    };
+module.exports = function(schema, options) {
+	// Common proto functions
+	schema.methods.activityActorFeed = function() {
+		return null;
+	};
 
-    schema.methods.activityGetActor = function () {
-        var actor = this[this.activityActorProp()];
-        if (typeof (actor) === 'undefined') {
-            throw new Error('Actor prop ' + this.activityActorProp() + ' not found on model instance');
-        }
+	schema.methods.activityGetActor = function() {
+		var actor = this[this.activityActorProp()];
+		if (typeof actor === 'undefined') {
+			throw new Error(
+				'Actor prop ' +
+					this.activityActorProp() +
+					' not found on model instance',
+			);
+		}
 
-        return actor;
-    };
+		return actor;
+	};
 
-    schema.methods.activityActor = function () {
-        var actor = this.activityGetActor();
-        return actor;
-    };
+	schema.methods.activityActor = function() {
+		var actor = this.activityGetActor();
+		return actor;
+	};
 
-    schema.methods.activityObject = function () {
-        return this;
-    };
+	schema.methods.activityObject = function() {
+		return this;
+	};
 
-    schema.methods.activityForeignId = function () {
-        return this;
-    };
+	schema.methods.activityForeignId = function() {
+		return this;
+	};
 
-    schema.methods.createActivity = function () {
-        var activity = {};
-        var extra_data = this.activityExtraData();
-        for (var key in extra_data) {
-            activity[key] = extra_data[key];
-        }
+	schema.methods.createActivity = function() {
+		var activity = {};
+		var extra_data = this.activityExtraData();
+		for (var key in extra_data) {
+			activity[key] = extra_data[key];
+		}
 
-        activity.to = (this.activityNotify() || []).map(function (x) {return x.id;});
+		activity.to = (this.activityNotify() || []).map(function(x) {
+			return x.id;
+		});
 
-        activity.actor = this.activityActor();
-        activity.verb = this.activityVerb();
-        activity.object = this.activityObject();
-        activity.foreign_id = this.activityForeignId();
-        if (this.activityTime()) {
-            activity.time = this.activityTime();
-        }
+		activity.actor = this.activityActor();
+		activity.verb = this.activityVerb();
+		activity.object = this.activityObject();
+		activity.foreign_id = this.activityForeignId();
+		if (this.activityTime()) {
+			activity.time = this.activityTime();
+		}
 
-        return activity;
-    };
+		return activity;
+	};
 
-    // User specific proto functions (with decent defaults)
-    schema.methods.getStreamBackend = function () {
-        throw new Error('Not implemented');
-    };
+	// User specific proto functions (with decent defaults)
+	schema.methods.getStreamBackend = function() {
+		throw new Error('Not implemented');
+	};
 
-    schema.methods.activityActorProp = function () {
-        return 'user';
-    };
+	schema.methods.activityActorProp = function() {
+		return 'user';
+	};
 
-    schema.methods.activityVerb = function () {
-        return this.constructor.name;
-    };
+	schema.methods.activityVerb = function() {
+		return this.constructor.name;
+	};
 
-    schema.methods.activityExtraData = function () {
-        return {};
-    };
+	schema.methods.activityExtraData = function() {
+		return {};
+	};
 
-    schema.methods.activityTime = function () {};
+	schema.methods.activityTime = function() {};
 
-    schema.methods.activityNotify = function () {};
-
+	schema.methods.activityNotify = function() {};
 };
