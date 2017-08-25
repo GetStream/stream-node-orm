@@ -69,18 +69,12 @@ BaseBackend.prototype = {
 				if (typeof modelClass === 'undefined') return done();
 				if (typeof objects[modelRef] === 'undefined')
 					objects[modelRef] = {};
-				self.loadFromStorageOrCustom(
-					modelRef,
-					modelClass,
-					refs,
-					function(err, objectsIds) {
+				self.loadFromStorageOrCustom(modelRef, modelClass, refs, function(err, objectsIds) {
 						for (var k in objectsIds) {
 							objects[modelRef][k] = objectsIds[k];
 						}
-
 						done(err);
-					},
-				);
+				});
 			},
 			function(err) {
 				callback(err, objects);
