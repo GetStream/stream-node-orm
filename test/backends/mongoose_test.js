@@ -74,14 +74,14 @@ describe('Backend', function() {
 					var linkSave = Promise.denodeify(link.save);
 					return linkSave.call(link);
 				}.bind(this),
-				done,
+				done
 			)
 			.then(
 				function() {
 					this.link = link;
 					done();
 				}.bind(this),
-				done,
+				done
 			);
 
 		// replace the module `request` with a stub object
