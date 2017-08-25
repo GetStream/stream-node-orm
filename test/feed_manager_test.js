@@ -57,7 +57,7 @@ describe('FeedManager', function() {
 
 		expect(feeds['timeline'].id).to.be('timeline:matthisk');
 		expect(feeds['timeline_aggregated'].id).to.be(
-			'timeline_aggregated:matthisk',
+			'timeline_aggregated:matthisk'
 		);
 	});
 
