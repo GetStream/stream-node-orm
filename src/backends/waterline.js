@@ -14,11 +14,6 @@ util.inherits(Backend, baseBackend);
 
 Backend.prototype.serializeValue = function(value) {
 	throw new Error('Cant serialize for waterline since model.identity is not accessible from the instance');
-	// if (typeof (value._id) != 'undefined') {
-	//     return value.constructor.modelName + ':' + value.id;
-	// } else {
-	//     return value;
-	// }
 };
 
 (Backend.prototype.collectReferences = function(activities) {

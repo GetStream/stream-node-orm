@@ -25,7 +25,7 @@ var tweetSchema = new Schema({
 	text: String,
 	actor: { type: Schema.Types.ObjectId, ref: 'User' },
 	bg: String,
-	link: { type: Schema.Types.ObjectId, ref: 'Link' },
+	link: { type: Schema.Types.ObjectId, ref: 'Link' }
 });
 
 tweetSchema.plugin(StreamMongoose.activity);
@@ -37,7 +37,7 @@ tweetSchema.statics.pathsToPopulate = function() {
 tweetSchema.methods.activityNotify = function() {
 	return [
 		stream.FeedManager.getFeed('notification', '1'),
-		stream.FeedManager.getFeed('notification', '2'),
+		stream.FeedManager.getFeed('notification', '2')
 	];
 };
 
@@ -136,7 +136,7 @@ describe('Backend', function() {
 			backend.serializeActivities(activities2);
 			var aggregatedActivities = [
 				{ actor_count: 1, activities: activities },
-				{ actor_count: 1, activities: activities2 },
+				{ actor_count: 1, activities: activities2 }
 			];
 			backend
 				.enrichAggregatedActivities(aggregatedActivities)
@@ -172,7 +172,7 @@ describe('Backend', function() {
 			var activity = tweet.createActivity();
 			backend.serializeActivities([activity]);
 			var aggregatedActivities = [
-				{ actor_count: 1, activities: [activity] },
+				{ actor_count: 1, activities: [activity] }
 			];
 			backend
 				.enrichAggregatedActivities(aggregatedActivities)
@@ -201,7 +201,7 @@ describe('Backend', function() {
 			backend.serializeActivities([activity]);
 			var aggregatedActivities = [
 				{ actor_count: 1, activities: [activity] },
-				{ actor_count: 1, activities: [activity, activity] },
+				{ actor_count: 1, activities: [activity, activity] }
 			];
 			backend
 				.enrichAggregatedActivities(aggregatedActivities)
@@ -258,14 +258,8 @@ describe('Backend', function() {
 			.then(function(enriched) {
 				enriched.should.length(1);
 				enriched[0].should.have.property('actor');
-				enriched[0]['actor'].should.have.property(
-					'_id',
-					self.actor._id,
-				);
-				enriched[0].should.have.property(
-					'foreign_id',
-					'Tweet:' + tweet._id,
-				);
+				enriched[0]['actor'].should.have.property('_id', self.actor._id);
+				enriched[0].should.have.property('foreign_id', 'Tweet:' + tweet._id);
 			});
 	});
 
@@ -290,10 +284,7 @@ describe('Backend', function() {
 			.then(function(enriched) {
 				enriched.should.length(1);
 				enriched[0].should.have.property('actor');
-				enriched[0]['actor'].should.have.property(
-					'_id',
-					self.actor._id,
-				);
+				enriched[0]['actor'].should.have.property('_id', self.actor._id);
 				enriched[0].should.have.property('object');
 				enriched[0]['object'].should.have.property('_id', tweet._id);
 				enriched[0]['object'].should.have.property('text', tweet.text);
@@ -318,10 +309,7 @@ describe('Backend', function() {
 			.then(function(tweet) {
 				var activity = tweet.createActivity();
 				tweet.getStreamBackend().serializeActivities([activity]);
-				activity.should.have.property(
-					'actor',
-					'User:' + tweet.actor._id,
-				);
+				activity.should.have.property('actor', 'User:' + tweet.actor._id);
 				activity.should.have.property('link', 'Link:' + tweet.link._id);
 				activity.should.have.property('bg', 'bgvalue');
 				activity.should.have.property('object', 'Tweet:' + tweet._id);
@@ -366,7 +354,7 @@ describe('Backend', function() {
 			.then(function() {
 				var activities = [
 					tweet1.createActivity(),
-					tweet2.createActivity(),
+					tweet2.createActivity()
 				];
 
 				return backend.enrichActivities(activities);
@@ -375,9 +363,7 @@ describe('Backend', function() {
 				enriched.should.length(2);
 				enriched[0].should.have.property('foreign_id');
 				enriched[1].should.have.property('foreign_id');
-				enriched[0]['foreign_id'].should.not.equal(
-					enriched[1]['foreign_id'],
-				);
+				enriched[0]['foreign_id'].should.not.equal(enriched[1]['foreign_id']);
 			});
 	});
 });
@@ -401,7 +387,7 @@ describe('Tweet', function() {
 		var activity = tweet.createActivity();
 		activity.should.have.property('to', [
 			'notification:1',
-			'notification:2',
+			'notification:2'
 		]);
 	});
 

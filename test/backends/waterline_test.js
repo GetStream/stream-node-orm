@@ -22,13 +22,13 @@ describe('Waterline Backend', function() {
 				{
 					actor: 'User:123456',
 					object: 'Tweet:00001',
-					other: 'something',
+					other: 'something'
 				},
 			]);
 
 			expect(refs).to.eql({
 				User: ['123456'],
-				Tweet: ['00001'],
+				Tweet: ['00001']
 			});
 		});
 
@@ -37,13 +37,13 @@ describe('Waterline Backend', function() {
 				{
 					actor: 'User:123456',
 					object: 'Tweet:00001',
-					origin: 'Tweet:00002',
+					origin: 'Tweet:00002'
 				},
 			]);
 
 			expect(refs).to.eql({
 				User: ['123456'],
-				Tweet: ['00001'],
+				Tweet: ['00001']
 			});
 		});
 
@@ -52,13 +52,13 @@ describe('Waterline Backend', function() {
 				{
 					actor: 'User:123456',
 					object: 'Tweet:00001',
-					other: 'Tweet:00002',
-				},
+					other: 'Tweet:00002'
+				}
 			]);
 
 			expect(refs).to.eql({
 				User: ['123456'],
-				Tweet: ['00001', '00002'],
+				Tweet: ['00001', '00002']
 			});
 		});
 	});
@@ -87,7 +87,7 @@ describe('Waterline Backend', function() {
 				return {
 					exec: function(cb) {
 						cb(null, [{ id: 0 }, { id: 1 }, { id: 2 }]);
-					},
+					}
 				};
 			},
 		};

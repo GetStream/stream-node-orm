@@ -14,13 +14,13 @@ describe('Base Backend', function() {
 				{
 					actor: 'User:123456',
 					object: 'Tweet:00001',
-					other: 'something',
-				},
+					other: 'something'
+				}
 			]);
 
 			expect(refs).to.eql({
 				User: ['123456'],
-				Tweet: ['00001'],
+				Tweet: ['00001']
 			});
 		});
 
@@ -29,8 +29,8 @@ describe('Base Backend', function() {
 				{
 					actor: 'User:123456',
 					object: 'Tweet:00001',
-					origin: 'Tweet:00002',
-				},
+					origin: 'Tweet:00002'
+				}
 			]);
 
 			expect(refs).to.eql({
@@ -44,8 +44,8 @@ describe('Base Backend', function() {
 				{
 					actor: 'User:123456',
 					object: 'Tweet:00001',
-					other: 'Tweet:00002',
-				},
+					other: 'Tweet:00002'
+				}
 			]);
 
 			expect(refs).to.eql({
@@ -61,7 +61,7 @@ describe('Base Backend', function() {
 		var activity = {
 			actor: 'User:123456',
 			object: 'Tweet:1',
-			other: 'matthisk',
+			other: 'matthisk'
 		};
 
 		backend.serializeActivity(activity);

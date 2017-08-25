@@ -23,7 +23,7 @@ BaseBackend.prototype = {
 				if (!filter(field, activity[field])) continue;
 				var args = {
 					activity: activity,
-					field: field,
+					field: field
 				};
 				fn(args);
 			}
