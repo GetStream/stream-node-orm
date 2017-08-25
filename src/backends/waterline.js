@@ -13,9 +13,7 @@ function Backend() {}
 util.inherits(Backend, baseBackend);
 
 Backend.prototype.serializeValue = function(value) {
-	throw new Error(
-		'Cant serialize for waterline since model.identity is not accessible from the instance',
-	);
+	throw new Error('Cant serialize for waterline since model.identity is not accessible from the instance');
 	// if (typeof (value._id) != 'undefined') {
 	//     return value.constructor.modelName + ':' + value.id;
 	// } else {
@@ -68,76 +66,3 @@ Backend.prototype.getClassFromRef = function(ref) {
 Backend.prototype.getIdFromRef = function(ref) {
 	return ref.split(':')[1];
 };
-
-// function getReferencePaths(paths) {
-//     var names = [];
-//     for (var k in paths) {
-//         if (paths[k].instance === 'ObjectID' && k !== 'id') {
-//             names.push(paths[k].path);
-//         }
-//     }
-
-//     return names.join(' ');
-// }
-
-/*
-
-We could do this using lodash.merge
-https://lodash.com/docs/4.16.1#merge
-in combination with these lifecycle objects
-http://sailsjs.org/documentation/concepts/models-and-orm/lifecycle-callbacks
-afterCreate
-afterDestroy
-
-Could bind the model.identity so that in case we actually know the identity
-
-var mongooseActivitySchemaPlugin = function(schema, options) {
-  schema.pre('save', function(next) {
-    this.wasNew = this.isNew;
-    next();
-  });
-
-  schema.post('save', function(doc) {
-    var paths = getReferencePaths(doc.schema.paths);
-    doc.populate(paths, function(err, docP) {
-      if (docP.wasNew) {
-        stream.FeedManager.activityCreated(docP);
-      }
-    });
-  });
-
-  schema.post('remove', function(doc) {
-    var paths = getReferencePaths(doc.schema.paths);
-    doc.populate(paths, function(err, docP) {
-      stream.FeedManager.activityDeleted(docP);
-    });
-  });
-
-  // add Mongoose specific proto functions
-  schema.methods.referencesPaths = function() {
-    return this;
-  };
-
-  schema.methods.getStreamBackend = function() {
-    return new Backend();
-  };
-
-  schema.statics.activityModelReference = function() {
-    return this.modelName;
-  };
-
-  schema.methods.activityVerb = function() {
-    return this.constructor.modelName;
-  };
-
-  schema.statics.pathsToPopulate = function() {
-    return [];
-  };
-};
-
-module.exports.activity = function(schema, options) {
-  schema.plugin(baseActivitySchemaPlugin);
-  schema.plugin(mongooseActivitySchemaPlugin);
-};*/
-
-module.exports.Backend = Backend;
