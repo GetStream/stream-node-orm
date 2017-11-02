@@ -55,7 +55,7 @@ Make sure you require the getstream-node early on in your application (eg. in ap
 Login with Github on [getstream.io](https://getstream.io/) and edit the configuration values for
 ```apiKey```, ```apiSecret``` and ```apiAppId``` in your `getstream.js` file (you can find them in the [dashboard](https://getstream.io/dashboard/)).
 
-###Model integration
+### Model integration
 
 Stream Node.js can automatically publish new activities to your feeds. To do that you only need to register the models you want to publish with this library.
 
