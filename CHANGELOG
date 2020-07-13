@@ -2,6 +2,14 @@
  Change history
 ================
 
+2.0.0
+=====
+:release-date: 13-07-2020
+:by: Amin Mahboubi
+
+* Breaking change: Drop support for node v11, v13 and below v10
+
+
 1.0.0
 =====
 :release-date: 25-11-2015
