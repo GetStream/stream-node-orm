@@ -30,13 +30,12 @@
 	"license": "BSD-3-Clause",
 	"main": "./src/index.js",
 	"dependencies": {
-		"async": ">=2.5.0",
-		"extend": ">=3.0.1",
-		"getstream": ">=3.5.0",
-		"istanbul": ">=0.4.5",
-		"mockery": ">=2.1.0",
-		"promise": ">=8.0.1",
-		"sinon": ">=3.2.1"
+		"async": "^3.2.0",
+		"extend": "^3.0.2",
+		"getstream": "^5.0.0",
+		"istanbul": "^0.4.5",
+		"mongoose": "^5.9.23",
+		"promise": "^8.1.0"
 	},
 	"devDependencies": {
 		"better-assert": "~1.0.2",
@@ -48,10 +47,11 @@
 		"jscs": "~3.0.7",
 		"mocha": "~3.5.0",
 		"mock-fs": "~4.4.1",
+		"mockery": "^2.1.0",
 		"pmock": "~0.2.3",
 		"rewire": "~2.5.2",
 		"should": "~11.2.1",
-		"mongoose": ">=4.11.8"
+		"sinon": "^3.2.1"
 	},
 	"scripts": {
 		"test": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' NODE_ENV=test ./node_modules/.bin/mocha --timeout 30000 test test/**/*_test.js",
@@ -60,7 +60,7 @@
 		"postversion": "git push && git push --tags"
 	},
 	"engines": {
-		"node": ">=0.11 <=10.7"
+		"node": "10 || 12 || >=14"
 	},
 	"homepage": "http://getstream.io"
 }
