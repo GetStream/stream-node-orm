@@ -1,19 +1,11 @@
-================
- Change history
-================
+# Changelog
 
-2.0.0
-=====
-:release-date: 13-07-2020
-:by: Amin Mahboubi
+## 2.0.0 - 13-07-2020
 
 * Breaking change: Drop support for node v11, v13 and below v10
 
 
-1.0.0
-=====
-:release-date: 25-11-2015
-:by: Matthisk Heimensen
+## 1.0.0 - 25-11-2015
 
 * Breaking change: enrichActivities and enrichAggregatedActivities no longer accept a callback but return a promise
 * Breaking change: No longer register a schema to be an ActivitySchema through activitySchema method but build an ActivitySchema object from ActivitySchemaFactory
