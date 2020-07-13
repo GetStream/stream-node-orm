@@ -1,15 +1,14 @@
 language: node_js
 node_js:
   - "node"
-  - "8"
-  - "7"
-  - "6"
   - "10"
+  - "12"
+  - "14"
 env:
   - MONGOOSE_VERSION=4.11.8 STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42'
 matrix:
   include:
-    - node_js: 8
+    - node_js: 10
       env: MONGOOSE_VERSION=4.0
 before_script:
   - npm install mongoose@$MONGOOSE_VERSION
