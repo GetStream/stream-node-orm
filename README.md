@@ -315,9 +315,9 @@ npm publish
 
 ### Supported Node.js Versions
 ```
-v8.x
-v7.x
-v6.x
+v10.x
+v12.x
+v14.x
 ```
 
 ### Copyright and License Information
