@@ -1,4 +1,4 @@
-var stream = require('getstream'),
+var stream = require('getstream').default,
 	Promise = require('promise');
 var FeedManager = function() {
 	this.initialize.apply(this, arguments);
