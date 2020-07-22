@@ -59,12 +59,11 @@ describe('Config', function() {
 });
 
 describe.skip('Config Env Var', function() {
-	var configDir = path.join(__dirname, './tmp');
-	var configFile = path.join(configDir, 'getstream.js');
+	var configFile = '/tmp/getstream.js';
 
 	before(function() {
 		this.env = pmock.env({
-			STREAM_NODE_CONFIG_DIR: configDir,
+			STREAM_NODE_CONFIG_PATH: configFile,
 		});
 
 		mockery.enable({
