@@ -19,8 +19,8 @@ var Config = function() {
 		config_file = '';
 	// load config from defaults or config file
 
-	if (typeof process != 'undefined' && process.env.STREAM_NODE_CONFIG_DIR) {
-		config_file = process.env.STREAM_NODE_CONFIG_DIR + '/getstream.js';
+	if (typeof process != 'undefined' && process.env.STREAM_NODE_CONFIG_PATH) {
+		config_file = process.cwd() + process.env.STREAM_NODE_CONFIG_PATH;
 	} else {
 		config_file = process.cwd() + '/getstream.js';
 	}
