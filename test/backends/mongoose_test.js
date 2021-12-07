@@ -138,7 +138,7 @@ describe("Backend", function () {
     let tweets = [tweet1, tweet2];
 
     Tweet.create(tweets, function (err) {
-      // should.not.exist(err);
+      should.not.exist(err);
       let activities = [tweet1.createActivity()];
       let activities2 = [tweet2.createActivity()];
 
