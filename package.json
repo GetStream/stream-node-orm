@@ -1,68 +1,68 @@
 {
-	"name": "getstream-node",
-	"version": "2.0.0",
-	"description": "Build newsfeeds and activity feeds on node.js using getstream.io",
-	"author": "getstream.io <support@getstream.io> (https://getstream.io/)",
-	"email": "support@getstream.io",
-	"company": "Stream.io INC",
-	"contributors": [
-		{
-			"name": "Mario Delgado",
-			"email": "mariodel@gmail.com"
-		},
-		{
-			"name": "Thierry Schellenbach",
-			"email": "thierry@getstream.io"
-		},
-		{
-			"name": "Tommaso Barbugli",
-			"email": "tommaso@getstream.io"
-		},
-		{
-			"name": "Matthisk Heimensen",
-			"email": "matthisk@getstream.io"
-		},
-		{
-			"name": "Nick Parsons",
-			"email": "nparsons08@gmail.com"
-		}
-	],
-	"license": "BSD-3-Clause",
-	"main": "./src/index.js",
-	"dependencies": {
-		"async": "^3.2.0",
-		"extend": "^3.0.2",
-		"getstream": "^7.3.1",
-		"js-yaml": "^4.1.0",
-		"mongoose": "^5.9.23",
-		"promise": "^8.1.0",
-		"uglify-js": "^3.14.4",
-		"underscore": "^1.13.1"
-	},
-	"devDependencies": {
-		"better-assert": "~1.0.2",
-		"bson": "^1.1.6",
-		"coveralls": "^3.1.1",
-		"eslint": "^8.3.0",
-		"expect.js": "~0.3.1",
-		"glob": "~7.1.2",
-		"istanbul": "^0.4.5",
-		"mocha": "^9.1.3",
-		"mock-fs": "~4.4.1",
-		"mockery": "^2.1.0",
-		"pmock": "~0.2.3",
-		"rewire": "~2.5.2",
-		"should": "~11.2.1",
-		"sinon": "^12.0.1"
-	},
-	"scripts": {
-		"test": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' NODE_ENV=test ./node_modules/.bin/mocha --timeout 30000 test test/**/*_test.js",
-		"coverage": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' ./node_modules/.bin/istanbul cover bin/run-tests.js",
-		"preversion": "npm test",
-		"postversion": "git push && git push --tags"
-	},
-	"engines": {
-		"node": "10 || 12 || >=14"
-	},
-	"homepage": "http://getstream.io"
+  "name": "getstream-node",
+  "version": "2.0.0",
+  "description": "Build newsfeeds and activity feeds on node.js using getstream.io",
+  "author": "getstream.io <support@getstream.io> (https://getstream.io/)",
+  "email": "support@getstream.io",
+  "company": "Stream.io INC",
+  "contributors": [
+    {
+      "name": "Mario Delgado",
+      "email": "mariodel@gmail.com"
+    },
+    {
+      "name": "Thierry Schellenbach",
+      "email": "thierry@getstream.io"
+    },
+    {
+      "name": "Tommaso Barbugli",
+      "email": "tommaso@getstream.io"
+    },
+    {
+      "name": "Matthisk Heimensen",
+      "email": "matthisk@getstream.io"
+    },
+    {
+      "name": "Nick Parsons",
+      "email": "nparsons08@gmail.com"
+    }
+  ],
+  "license": "BSD-3-Clause",
+  "main": "./src/index.js",
+  "dependencies": {
+    "async": "^3.2.0",
+    "extend": "^3.0.2",
+    "getstream": "^7.3.1",
+    "js-yaml": "^4.1.0",
+    "mongoose": "^5.9.23",
+    "promise": "^8.1.0",
+    "uglify-js": "^3.14.4",
+    "underscore": "^1.13.1"
+  },
+  "devDependencies": {
+    "better-assert": "~1.0.2",
+    "bson": "^1.1.6",
+    "coveralls": "^3.1.1",
+    "eslint": "^8.3.0",
+    "expect.js": "~0.3.1",
+    "glob": "~7.1.2",
+    "istanbul": "^0.4.5",
+    "mocha": "^9.1.3",
+    "mock-fs": "~4.4.1",
+    "mockery": "^2.1.0",
+    "pmock": "^0.2.3",
+    "rewire": "~2.5.2",
+    "should": "^13.2.3",
+    "sinon": "^12.0.1"
+  },
+  "scripts": {
+    "test": "set STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' NODE_ENV=test&& mocha --timeout 30000 test test/**/*_test.js",
+    "coverage": "STREAM_URL='https://key:secret@us-east.getstream.io/?app_id=42' ./node_modules/.bin/istanbul cover bin/run-tests.js",
+    "preversion": "npm test",
+    "postversion": "git push && git push --tags"
+  },
+  "engines": {
+    "node": "10 || 12 || >=14"
+  },
+  "homepage": "http://getstream.io"
 }
