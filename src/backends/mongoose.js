@@ -1,4 +1,4 @@
-var baseActivitySchemaPlugin = require("./activity.js");
+var { baseActivitySchemaPlugin } = require("./activity.js");
 var mongoose = require("mongoose");
 var stream = require("../index.js");
 const { BaseBackend } = require("./base");
@@ -99,17 +99,17 @@ var mongooseActivitySchemaPlugin = function (schema, options) {
 
   schema.post("save", function (doc) {
     var paths = getReferencePaths(doc.schema.paths);
-    doc.populate(paths, function (err, docP) {
-      if (docP.wasNew) {
-        stream.FeedManager.activityCreated(docP);
+    doc.populate(paths, function (err, path) {
+      if (path.wasNew) {
+        stream.FeedManager.activityCreated(path);
       }
     });
   });
 
   schema.post("remove", function (doc) {
     var paths = getReferencePaths(doc.schema.paths);
-    doc.populate(paths, function (err, docP) {
-      stream.FeedManager.activityDeleted(docP);
+    this.populate(paths, function (err, path) {
+      stream.FeedManager.activityDeleted(path);
     });
   });
 
