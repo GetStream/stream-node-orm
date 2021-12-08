@@ -100,6 +100,9 @@ var mongooseActivitySchemaPlugin = function (schema, options) {
   schema.post("save", function (doc) {
     var paths = getReferencePaths(doc.schema.paths);
     doc.populate(paths, function (err, path) {
+      if (err) {
+        throw err;
+      }
       if (path.wasNew) {
         stream.FeedManager.activityCreated(path);
       }
@@ -109,6 +112,9 @@ var mongooseActivitySchemaPlugin = function (schema, options) {
   schema.post("remove", function (doc) {
     var paths = getReferencePaths(doc.schema.paths);
     this.populate(paths, function (err, path) {
+      if (err) {
+        throw err;
+      }
       stream.FeedManager.activityDeleted(path);
     });
   });
